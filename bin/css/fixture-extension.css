@@ -1,0 +1,28 @@
+.concordion-output.output-success {
+	
+	background-color: #fff; 
+	border: 1px solid #666666; 
+	margin: 20px;
+	padding: 20px;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.concordion-output .output-expected {
+	width: 40%; 
+	float:left; 
+	background-color: #fff; 
+	border: 1px solid #666666; 
+	margin: 20px;
+	padding: 20px;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.concordion-output .output-actual {
+	width: 40%; 
+	float:left; 
+	background-color: #fff; 
+	border: 1px solid #666666; 
+	margin: 20px;
+	padding: 20px;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
