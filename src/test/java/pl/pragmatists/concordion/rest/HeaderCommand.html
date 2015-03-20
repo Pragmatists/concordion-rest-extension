@@ -13,7 +13,7 @@
 		<h3>Should fail if header is missing</h3>
 		Given there is resource at <code c:execute="respondOkFor(#TEXT)">/hello</code><br/>
 		And it responds with <b>no</b> header <code>Content-Type</code><br/>
-		When following fixutre is executed:
+		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
@@ -37,7 +37,7 @@
 		Given there is resource at <code c:set="#url">/hello</code><br/>
 		And it responds with header <span c:execute="respondWithHeader(#url, #headerName, #headerValue)"> 
 		<code c:set="#headerName">Content-Type</code> set to <b c:set="#headerValue">application/json</b></span><br/>
-		When following fixutre is executed:
+		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
@@ -61,7 +61,7 @@
 		Given there is resource at <code c:set="#url">/hello</code><br/>
 		And it responds with header <span c:execute="respondWithHeader(#url, #headerName, #headerValue)"> 
 		<code c:set="#headerName">Content-Type</code> set to <b c:set="#headerValue">text/html</b></span><br/>
-		When following fixutre is executed:
+		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
@@ -84,7 +84,7 @@
 <!-- 		Given there is resource at <code c:set="#url">/hello</code><br/> -->
 <!-- 		And it responds with header <span c:execute="respondWithHeader(#url, #headerName, #headerValue)">  -->
 <!-- 		<code c:set="#headerName">Content-Type</code> set to <b c:set="#headerValue">text/html</b></span><br/> -->
-<!-- 		When following fixutre is executed: -->
+<!-- 		When following fixture is executed: -->
 <!-- 		<f:fixture c:execute="#result = process(#TEXT)"> -->
 <!-- <rest:request> -->
 <!-- 	<b concordion:set="#header">Content-Type</b> -->

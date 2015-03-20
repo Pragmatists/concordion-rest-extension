@@ -20,8 +20,11 @@ public class RestExtension implements ConcordionExtension{
     public void addTo(ConcordionExtender concordionExtender) {
         
         concordionExtender.withCommand(REST_EXTENSION_NS, "request", new RequestCommand());
-        concordionExtender.withCommand(REST_EXTENSION_NS, "get", new GetCommand());
-        concordionExtender.withCommand(REST_EXTENSION_NS, "post", new PostCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "get", new HttpMethodCommand("GET"));
+        concordionExtender.withCommand(REST_EXTENSION_NS, "post", new HttpMethodCommand("POST"));
+        concordionExtender.withCommand(REST_EXTENSION_NS, "put", new HttpMethodCommand("PUT"));
+        concordionExtender.withCommand(REST_EXTENSION_NS, "delete", new HttpMethodCommand("DELETE"));
+        concordionExtender.withCommand(REST_EXTENSION_NS, "patch", new HttpMethodCommand("PATCH"));
         concordionExtender.withCommand(REST_EXTENSION_NS, "jsonBody", new JsonBodyCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "setHeader", new SetHeaderCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "status", new ExpectedStatusCommand());
@@ -34,6 +37,9 @@ public class RestExtension implements ConcordionExtension{
                 put("request", "div");
                 put("get", "code");
                 put("post", "code");
+                put("put", "code");
+                put("delete", "code");
+                put("patch", "code");
                 put("jsonBody", "pre");
                 put("setHeader", "code");
                 put("status", "code");

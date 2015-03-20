@@ -1,0 +1,23 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>Get Command</h1>
+	<p>TODO</p>
+	
+	<div class="example">
+		<h3>Should send GET request to given url</h3>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+</rest:request>		
+		</f:fixture>
+		Then <span c:execute="#sent = requestSent(#method, #url)">
+		<b c:set="#method">GET</b> request has been <span c:assertTrue="#sent">sent</span> to <code c:set="#url">/hello</code></span>
+	</div>
+</body>
+</html>

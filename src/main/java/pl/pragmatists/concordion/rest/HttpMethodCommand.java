@@ -5,16 +5,21 @@ import org.concordion.api.CommandCall;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 
-public class GetCommand extends AbstractCommand {
+public class HttpMethodCommand extends AbstractCommand {
 
+    private String method;
+
+    public HttpMethodCommand(String method) {
+        this.method = method;
+    }
+    
     @Override
     public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
-        RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
-        request.method("GET");
-        request.url(commandCall.getElement().getText());
-        
+        String url = commandCall.getElement().getText();
+        RequestExecutor.fromEvaluator(evaluator)
+            .method(method)
+            .url(url);
     }
-
     
 }

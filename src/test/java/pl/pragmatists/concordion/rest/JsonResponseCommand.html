@@ -13,7 +13,7 @@
 		<h3>Should fail if response body is missing</h3>
 		Given there is resource at <code c:execute="respondOkFor(#TEXT)">/hello</code><br/>
 		And it responds with <b>no</b> body
-		When following fixutre is executed:
+		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
@@ -37,7 +37,7 @@
 		Given there is resource at <code c:set="#url">/hello</code><br/>
 		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
 		<pre c:set="#body">{ "greeting": "Hello You" }</pre></div><br/>
-		When following fixutre is executed:
+		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
@@ -61,7 +61,7 @@
 		Given there is resource at <code c:set="#url">/hello</code><br/>
 		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
 		<pre c:set="#body">{ "greeting": "Hello World" }</pre></div><br/>
-		When following fixutre is executed:
+		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
@@ -78,56 +78,5 @@
 </div>			
 		</div> 
 	</div>
-	
-	<div class="example">
-		<h3>Should compare json body response in sane way</h3>
-		Given there is resource at <code c:set="#url">/hello</code><br/>
-		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
-		<pre c:set="#body">
-{ 
-	"greeting": "Hello",
-	"who": "World" 
-}
-	</pre></div><br/>
-		When following fixutre is executed:
-	<table>
-		<tr>
-			<th>Formatting does not matter</th>
-			<td>
-		<f:fixture c:execute="#result = process(#TEXT)">
-<rest:request>
-	<rest:get>/hello</rest:get>
-	<rest:jsonResponse>
-{"greeting": "Hello","who": "World"}
-	</rest:jsonResponse>
-</rest:request>
-		</f:fixture>
-			</td>
-			<td>
-				<b c:assertTrue="#result.success">Success</b>
-			</td>
-		</tr>
-		<tr>
-			<th>Property order does not matter</th>
-			<td>
-		<f:fixture c:execute="#result = process(#TEXT)">
-<rest:request>
-	<rest:get>/hello</rest:get>
-	<rest:jsonResponse>
-{
-	"who": "World",
-	"greeting": "Hello"
-}
-	</rest:jsonResponse>
-</rest:request>		
-		</f:fixture>
-	</td>
-	<td>
-		<b c:assertTrue="#result.success">Success</b>
-	</td>
-	</tr>
-</table>
-	</div>
-		
 </body>
 </html>

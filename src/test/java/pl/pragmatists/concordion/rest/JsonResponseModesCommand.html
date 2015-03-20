@@ -1,0 +1,176 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:concordion="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>Json Response Command Modes</h1>
+	<p>TODO</p>
+		
+	<div class="example">
+		<h3>Should compare json response in Equals mode</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
+		<pre c:set="#body">
+{ 
+	"greeting": "Hello",
+	"who": "World" 
+}
+	</pre></div><br/>
+		When following fixture is executed:
+	<table>
+		<tr>
+			<th>Formatting does not matter</th>
+			<td>
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse mode="equals">
+{"greeting": "Hello","who": "World"}
+	</rest:jsonResponse>
+</rest:request>
+		</f:fixture>
+			</td>
+			<td>
+				<b c:assertTrue="#result.success">Success</b>
+			</td>
+		</tr>
+		<tr>
+			<th>Property order does not matter</th>
+			<td>
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse mode="equals">
+{
+	"who": "World",
+	"greeting": "Hello"
+}
+	</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+	</td>
+	<td>
+		<b c:assertTrue="#result.success">Success</b>
+	</td>
+	</tr>
+</table>
+	</div>
+	
+	<div class="example">
+		<h3>Should compare json response in Includes mode</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
+		<pre c:set="#body">
+{ 
+	"greeting": "Hello",
+	"who": {
+		"prefix": "Another",
+		"name": "World"
+	},
+	"from": ["Alice", "Bob"]
+}
+	</pre></div><br/>
+		When following fixture is executed:
+	<table>
+		<tr>
+			<th>Additional properties in actual do not matter</th>
+			<td>
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse mode="includes">
+{
+	"greeting": "Hello"
+}
+	</rest:jsonResponse>
+</rest:request>
+		</f:fixture>
+			</td>
+			<td>
+				<b c:assertTrue="#result.success">Success</b>
+			</td>
+		</tr>
+		<tr>
+			<th>Nested properties do matter (1)</th>
+			<td>
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse mode="includes">
+{
+	"who": {
+		"name": "World"		
+	}
+}
+	</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+	</td>
+	<td>
+		<b c:assertTrue="#result.success">Success</b>
+	</td>
+	</tr>
+		<tr>
+			<th>Nested properties do matter (2)</th>
+			<td>
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse mode="includes">
+{
+	"who": {
+		"name": "You"		
+	}
+}
+	</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+	</td>
+	<td>
+		<b c:assertFalse="#result.success">Failure</b>
+	</td>
+	</tr>
+		<tr>
+			<th>Collections order does not matter (1)</th>
+			<td>
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse mode="includes">
+{
+	"from": ["Alice", "Bob"]
+}
+	</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+	</td>
+	<td>
+		<b c:assertTrue="#result.success">Success</b>
+	</td>
+	</tr>
+		<tr>
+			<th>Collections order does not matter (2)</th>
+			<td>
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse mode="includes">
+{
+	"from": ["Bob", "Alice"]
+}
+	</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+	</td>
+	<td>
+		<b c:assertTrue="#result.success">Failure</b>
+	</td>
+	</tr>
+</table>
+	</div>
+		
+</body>
+</html>

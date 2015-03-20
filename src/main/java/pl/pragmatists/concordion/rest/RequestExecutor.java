@@ -19,12 +19,14 @@ public class RequestExecutor {
         request = RestAssured.given();
     }
     
-    public void method(String method) {
+    public RequestExecutor method(String method) {
         this.method = method;
+        return this;
     }
 
-    public void url(String url) {
+    public RequestExecutor url(String url) {
         this.url = url;
+        return this;
     }
     
     public void execute(){
@@ -36,6 +38,15 @@ public class RequestExecutor {
         case "POST":
             response = request.post(url);
             break;
+        case "PUT":
+            response = request.put(url);
+            break;
+        case "DELETE":
+            response = request.delete(url);
+            break;
+        case "PATCH":
+            response = request.patch(url);
+            break;
         default:
             break;
         }
@@ -43,8 +54,9 @@ public class RequestExecutor {
         
     }
 
-    public void header(String headerName, String headerValue) {
+    public RequestExecutor header(String headerName, String headerValue) {
         request.header(headerName, headerValue);
+        return this;
     }
 
     public String getHeader(String attributeValue) {
@@ -55,8 +67,9 @@ public class RequestExecutor {
         return response.getStatusLine();
     }
 
-    public void body(String body) {
+    public RequestExecutor body(String body) {
         request.body(body);
+        return this;
     }
 
     public String getBody() {
