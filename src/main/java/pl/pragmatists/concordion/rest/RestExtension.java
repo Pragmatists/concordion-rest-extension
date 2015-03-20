@@ -21,13 +21,18 @@ public class RestExtension implements ConcordionExtension{
         
         concordionExtender.withCommand(REST_EXTENSION_NS, "get", new GetCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "status", new ExpectedStatusCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "header", new ExpectedHeaderCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "setHeader", new SetHeaderCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "request", new RequestCommand());
         
         concordionExtender.withDocumentParsingListener(new DocumentParsingListener() {
             
             private Map<String, String> tags = new HashMap<String, String>(){{
                 put("request", "div");
+                put("setHeader", "code");
                 put("get", "code");
                 put("status", "code");
+                put("header", "code");
                 put("responseJson", "pre");
             }};
 

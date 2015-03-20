@@ -31,7 +31,7 @@ public class FixtureExtension implements ConcordionExtension{
                 Nodes fixtures = elem.query(String.format("//*[local-name()='%s' and namespace-uri()='%s']", "fixture", FIXTURE_EXTENSION_NS));
                 
                 for(int i=0; i<fixtures.size(); i++){
-                    Element fixture = (Element)fixtures.get(0);
+                    Element fixture = (Element)fixtures.get(i);
                     
                     StringBuilder xml = new StringBuilder();
                     

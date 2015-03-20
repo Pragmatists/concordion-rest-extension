@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.matching.RequestPattern;
 
 @RunWith(ConcordionRunner.class)
 @Extensions(FixtureExtension.class)
-public class RequestCommandFixture {
+public class StatusCommandFixture {
 
     @Rule
     public WireMockRule http = new WireMockRule();
@@ -37,6 +37,10 @@ public class RequestCommandFixture {
             .withNamespaceDeclaration("rest", RestExtension.REST_EXTENSION_NS)
             .processFragment(html);
             
+    }
+    
+    public void respondOkFor(String url) {
+        respondWith(200, url);
     }
     
     public void respondWith(Integer code, String url){

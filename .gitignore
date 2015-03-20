@@ -1,0 +1,19 @@
+# InteliJ IDEA files
+.idea
+*.ipr
+*.iws
+*.iml
+
+# Other files
+build
+*~
+.gradle
+logs
+classes
+.classpath
+.project
+.settings
+*/bin
+node_modules
+*.jasper
+.gradletasknamecache

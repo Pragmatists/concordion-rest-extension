@@ -1,0 +1,107 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:concordion="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>Header Command</h1>
+	<p>TODO</p>
+	
+	<div class="example">
+		<h3>Should fail if header is missing</h3>
+		Given there is resource at <code c:execute="respondOkFor(#TEXT)">/hello</code><br/>
+		And it responds with <b>no</b> header <code>Content-Type</code><br/>
+		When following fixutre is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:header name="Content-Type">text/html</rest:header>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<code class="failure">
+		<del class="expected">text/html</del>
+		<ins class="actual">(not set)</ins>	
+	</code>
+</div>			
+		</div> 
+	</div>
+	
+	<div class="example">
+		<h3>Should fail if header does not match</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with header <span c:execute="respondWithHeader(#url, #headerName, #headerValue)"> 
+		<code c:set="#headerName">Content-Type</code> set to <b c:set="#headerValue">application/json</b></span><br/>
+		When following fixutre is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:header name="Content-Type">text/html</rest:header>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<code class="failure">
+		<del class="expected">text/html</del>
+		<ins class="actual">application/json</ins>	
+	</code>
+</div>			
+		</div> 
+	</div>
+	
+	<div class="example">
+		<h3>Should be successful if header matches</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with header <span c:execute="respondWithHeader(#url, #headerName, #headerValue)"> 
+		<code c:set="#headerName">Content-Type</code> set to <b c:set="#headerValue">text/html</b></span><br/>
+		When following fixutre is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:header name="Content-Type">text/html</rest:header>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<code class="success">
+		text/html
+	</code>
+</div>			
+		</div> 
+	</div>
+	
+<!-- 	<div class="example"> -->
+<!-- 		<h3>Should allow to pass header name as variable</h3> -->
+<!-- 		Given there is resource at <code c:set="#url">/hello</code><br/> -->
+<!-- 		And it responds with header <span c:execute="respondWithHeader(#url, #headerName, #headerValue)">  -->
+<!-- 		<code c:set="#headerName">Content-Type</code> set to <b c:set="#headerValue">text/html</b></span><br/> -->
+<!-- 		When following fixutre is executed: -->
+<!-- 		<f:fixture c:execute="#result = process(#TEXT)"> -->
+<!-- <rest:request> -->
+<!-- 	<b concordion:set="#header">Content-Type</b> -->
+<!-- 	<rest:get>/hello</rest:get> -->
+<!-- 	<rest:header name="#header">text/html</rest:header> -->
+<!-- </rest:request>		 -->
+<!-- 		</f:fixture> -->
+<!-- 		Then it should produce following output:  -->
+<!-- 		<div f:assertHtmlIncludes="#result" class="concordion-output"> -->
+<!-- <div> -->
+<!-- 	<code>/hello</code> -->
+<!-- 	<code class="success"> -->
+<!-- 		text/html -->
+<!-- 	</code> -->
+<!-- </div>			 -->
+<!-- 		</div>  -->
+<!-- 	</div> -->
+	
+</body>
+</html>

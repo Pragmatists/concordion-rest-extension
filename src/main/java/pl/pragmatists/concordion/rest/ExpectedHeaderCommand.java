@@ -14,30 +14,32 @@ import org.concordion.internal.util.Announcer;
 
 import com.jayway.restassured.response.Response;
 
-public class ExpectedStatusCommand extends AbstractCommand {
+public class ExpectedHeaderCommand extends AbstractCommand {
 
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
     
-    public ExpectedStatusCommand() {
+    public ExpectedHeaderCommand() {
         listeners.addListener(new AssertResultRenderer());
     }
     
     @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
-        String expectedStatus = commandCall.getElement().getText();
+        Element element = commandCall.getElement();
+        String expectedHeader = element.getText();
         RequestExecutor response = (RequestExecutor) evaluator.getVariable("#request");
-        String actualStatus = response.getStatusLine();
+        String actualHeader = response.getHeader(element.getAttributeValue("name"));
+        if (actualHeader == null)
+            actualHeader = "(not set)";
+        System.err.println("HEADER(Expected): " + expectedHeader);
+        System.err.println("HEADER(Actual): " + actualHeader);
         
-        System.err.println("STATUS(Expected): " + expectedStatus);
-        System.err.println("STATUS(Actual): " + actualStatus);
-        
-        if(expectedStatus.equals(actualStatus)){
+        if(expectedHeader.equals(actualHeader)){
             resultRecorder.record(Result.SUCCESS);
-            announceSuccess(commandCall.getElement());
+            announceSuccess(element);
         } else {
             resultRecorder.record(Result.FAILURE);
-            announceFailure(commandCall.getElement(), expectedStatus, actualStatus);
+            announceFailure(element, expectedHeader, actualHeader);
         }
 
     }
