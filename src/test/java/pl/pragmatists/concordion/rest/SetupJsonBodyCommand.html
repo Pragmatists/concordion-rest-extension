@@ -1,0 +1,26 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:concordion="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>Set Json Body Command</h1>
+	<p>TODO</p>
+	
+	<div class="example">
+		<h3>Should send given json body</h3>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonBody>{ "name": "World" }</rest:jsonBody>
+</rest:request>		
+		</f:fixture>
+		Then request has been sent to <code c:set="#url">/hello</code> with body 
+		equal to <code c:assertEquals="requestBodyFor(#url)">{ "name": "World" }</code>
+	</div>
+	
+</body>
+</html>

@@ -33,10 +33,10 @@
 .concordion-output.output-success:after {
 	width: 100%;
 	height: 100%;
-	content: 'SUCCESS';
+	content: 'Success';
 	position: absolute;
 	top: 0px;
-	font-size: 400%;
+	font-size: 300%;
 	left: 0px;
 	color: #393;
 	text-align: center;
@@ -47,10 +47,10 @@
 .concordion-output .output-expected:after {
 	width: 100%;
 	height: 100%;
-	content: 'EXPECTED';
+	content: 'Expected';
 	position: absolute;
 	top: 0px;
-	font-size: 400%;
+	font-size: 300%;
 	left: 0px;
 	color: #933;
 	text-align: center;
@@ -61,10 +61,10 @@
 .concordion-output .output-actual:after {
 	width: 100%;
 	height: 100%;
-	content: 'ACTUAL';
+	content: 'Actual';
 	position: absolute;
 	top: 0px;
-	font-size: 400%;
+	font-size: 300%;
 	left: 0px;
 	color: #933;
 	text-align: center;
