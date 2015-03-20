@@ -17,8 +17,7 @@ public class RequestCommand extends AbstractCommand {
     @Override
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
-        RequestExecutor request = new RequestExecutor();
-        evaluator.setVariable("#request", request);
+        RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
         
         CommandCallList childCommands = commandCall.getChildren();
         childCommands.setUp(evaluator, resultRecorder);

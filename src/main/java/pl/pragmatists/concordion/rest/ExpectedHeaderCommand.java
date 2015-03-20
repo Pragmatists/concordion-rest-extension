@@ -12,8 +12,6 @@ import org.concordion.api.listener.AssertSuccessEvent;
 import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.util.Announcer;
 
-import com.jayway.restassured.response.Response;
-
 public class ExpectedHeaderCommand extends AbstractCommand {
 
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
@@ -27,7 +25,9 @@ public class ExpectedHeaderCommand extends AbstractCommand {
         
         Element element = commandCall.getElement();
         String expectedHeader = element.getText();
-        RequestExecutor response = (RequestExecutor) evaluator.getVariable("#request");
+        
+        RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
+        
         String actualHeader = response.getHeader(element.getAttributeValue("name"));
         if (actualHeader == null)
             actualHeader = "(not set)";

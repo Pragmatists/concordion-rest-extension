@@ -12,8 +12,6 @@ import org.concordion.api.listener.AssertSuccessEvent;
 import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.util.Announcer;
 
-import com.jayway.restassured.response.Response;
-
 public class ExpectedStatusCommand extends AbstractCommand {
 
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
@@ -26,7 +24,7 @@ public class ExpectedStatusCommand extends AbstractCommand {
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
         String expectedStatus = commandCall.getElement().getText();
-        RequestExecutor response = (RequestExecutor) evaluator.getVariable("#request");
+        RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
         String actualStatus = response.getStatusLine();
         
         System.err.println("STATUS(Expected): " + expectedStatus);

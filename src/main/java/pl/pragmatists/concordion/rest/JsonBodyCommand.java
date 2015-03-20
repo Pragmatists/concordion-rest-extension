@@ -9,11 +9,11 @@ import org.concordion.api.listener.AssertEqualsListener;
 import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.util.Announcer;
 
-public class SetHeaderCommand extends AbstractCommand {
+public class JsonBodyCommand extends AbstractCommand {
 
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
     
-    public SetHeaderCommand() {
+    public JsonBodyCommand() {
         listeners.addListener(new AssertResultRenderer());
     }
     
@@ -21,10 +21,9 @@ public class SetHeaderCommand extends AbstractCommand {
     public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
         Element element = commandCall.getElement();
-        String headerValue = element.getText();
+        String body = element.getText();
         RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
-        String headerName = element.getAttributeValue("name");
-        request.header(headerName, headerValue);
+        request.body(body);
     }
     
 }

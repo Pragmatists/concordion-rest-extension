@@ -19,21 +19,26 @@ public class RestExtension implements ConcordionExtension{
     @Override
     public void addTo(ConcordionExtender concordionExtender) {
         
+        concordionExtender.withCommand(REST_EXTENSION_NS, "request", new RequestCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "get", new GetCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "post", new PostCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "jsonBody", new JsonBodyCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "setHeader", new SetHeaderCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "status", new ExpectedStatusCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "header", new ExpectedHeaderCommand());
-        concordionExtender.withCommand(REST_EXTENSION_NS, "setHeader", new SetHeaderCommand());
-        concordionExtender.withCommand(REST_EXTENSION_NS, "request", new RequestCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "jsonResponse", new ExpectedJsonResponseCommand());
         
         concordionExtender.withDocumentParsingListener(new DocumentParsingListener() {
             
             private Map<String, String> tags = new HashMap<String, String>(){{
                 put("request", "div");
-                put("setHeader", "code");
                 put("get", "code");
+                put("post", "code");
+                put("jsonBody", "pre");
+                put("setHeader", "code");
                 put("status", "code");
                 put("header", "code");
-                put("responseJson", "pre");
+                put("jsonResponse", "pre");
             }};
 
             @Override

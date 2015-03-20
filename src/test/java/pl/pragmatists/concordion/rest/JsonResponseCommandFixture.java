@@ -4,10 +4,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static com.github.tomakehurst.wiremock.matching.RequestPattern.everything;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
 
 import org.concordion.api.extension.Extensions;
 import org.concordion.integration.junit4.ConcordionRunner;
@@ -21,11 +17,10 @@ import test.concordion.TestRig;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 
 @RunWith(ConcordionRunner.class)
 @Extensions(FixtureExtension.class)
-public class SetupHeaderCommandFixture {
+public class JsonResponseCommandFixture {
 
     @Rule
     public WireMockRule http = new WireMockRule();
@@ -56,18 +51,12 @@ public class SetupHeaderCommandFixture {
                );
     }
     
-    public void respondWithHeader(String url, String headerName, String headerValue) {
+    public void respondWithBody(String url, String body) {
         http.resetMappings();
         http.givenThat(
                 get(urlMatching(url)).
-                willReturn(aResponse().withStatus(200).withHeader(headerName, headerValue))
+                willReturn(aResponse().withStatus(200).withBody(body))
                );
-    }
-    
-    public String requestHeaderValueFor(String url, String headerName) {
-        List<LoggedRequest> requests = http.findRequestsMatching(everything()).getRequests();
-        assertThat(requests).hasSize(1);
-        return requests.get(0).getHeader(headerName);
     }
     
     public boolean urlHasBeenRequestedWithGET(String url) {
