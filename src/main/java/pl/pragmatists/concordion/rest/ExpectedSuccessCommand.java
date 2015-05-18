@@ -12,37 +12,32 @@ import org.concordion.api.listener.AssertSuccessEvent;
 import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.util.Announcer;
 
-public class ExpectedHeaderCommand extends AbstractCommand {
+public class ExpectedSuccessCommand extends AbstractCommand {
 
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
     
-    public ExpectedHeaderCommand() {
+    public ExpectedSuccessCommand() {
         listeners.addListener(new AssertResultRenderer());
     }
     
     @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
-        Element element = commandCall.getElement();
-        element.addStyleClass("header");
-        String expectedHeader = element.getText();
-        
+        String expectedStatus = commandCall.getElement().getText();
         RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
+        String actualStatus = response.getStatusLine();
+        boolean wasSuccessfull = response.wasSuccessfull();
         
-        String actualHeader = response.getHeader(element.getAttributeValue("name"));
-        if (actualHeader == null)
-            actualHeader = "(not set)";
-        System.err.println("HEADER(Expected): " + expectedHeader);
-        System.err.println("HEADER(Actual): " + actualHeader);
+        System.err.println("STATUS(Expected): success (200 -> 399)");
+        System.err.println("STATUS(Actual): " + actualStatus);
         
-        if(expectedHeader.equals(actualHeader)){
+        if(wasSuccessfull){
             resultRecorder.record(Result.SUCCESS);
-            announceSuccess(element);
+            announceSuccess(commandCall.getElement());
         } else {
             resultRecorder.record(Result.FAILURE);
-            announceFailure(element, expectedHeader, actualHeader);
+            announceFailure(commandCall.getElement(), expectedStatus, actualStatus);
         }
-
     }
 
     private void announceSuccess(Element element) {

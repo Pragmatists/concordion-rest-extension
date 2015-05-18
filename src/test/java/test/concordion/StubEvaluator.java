@@ -6,7 +6,7 @@ import org.concordion.api.EvaluatorFactory;
 public class StubEvaluator implements Evaluator, EvaluatorFactory {
 
     private Object evaluationResult = null;
-
+    
     public Evaluator createEvaluator(Object fixture) {
         return this;
     }

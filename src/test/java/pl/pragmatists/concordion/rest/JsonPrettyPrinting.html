@@ -1,0 +1,59 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:concordion="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>Json Pretty Printing</h1>
+	<p>TODO</p>
+	
+	<div class="example">
+		<h3>Json body is pretty printed</h3>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:jsonBody>{ "text":"text","isUgly":   true, "arrayPrimitieves": ["one", 2, 3], "arrayObjects": [{"three": 3}, {"two":2}]  }</rest:jsonBody>
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+	<pre class="json">
+{
+  "text" : "text",
+  "isUgly" : true,
+  "arrayPrimitieves" : [ "one", 2, 3 ],
+  "arrayObjects" : [ {
+    "three" : 3
+  }, {
+    "two" : 2
+  } ]
+}</pre>
+		</div> 
+	</div>
+	<div class="example">
+		<h3>Json response is pretty printed</h3>
+		Given response body is <pre c:execute="setResponseBody(#TEXT)">{ "text":"text","isUgly":   true, 
+"arrayPrimitieves": ["one", 2, 3], 
+"arrayObjects": [{"three": 3}, {"two":2}]  }
+		</pre>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:jsonResponse>{ "text":"text","isUgly":   true, "arrayPrimitieves": ["one", 2, 3], "arrayObjects": [{"three": 3}, {"two":2}]  }</rest:jsonResponse>
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+	<pre class="json">
+{
+  "text" : "text",
+  "isUgly" : true,
+  "arrayPrimitieves" : [ "one", 2, 3 ],
+  "arrayObjects" : [ {
+    "three" : 3
+  }, {
+    "two" : 2
+  } ]
+}</pre>
+		</div> 
+	</div>
+</body>
+</html>

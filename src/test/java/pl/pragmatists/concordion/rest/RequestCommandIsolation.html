@@ -6,21 +6,24 @@
 	>
 <body>
 	
-	<h1>Set Json Body Command</h1>
+	<h1>Request Command</h1>
 	<p>TODO</p>
-	
+		
 	<div class="example">
-		<h3>Should send given json body</h3>
+		<h3>Sibling requests do not interfere</h3>
 		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
-	<rest:post>/hello</rest:post>
-	<rest:jsonBody>{ "name": "World" }</rest:jsonBody>
+	<rest:get>/hello</rest:get>
+	<rest:setHeader name="X-Name">World</rest:setHeader>
+</rest:request>		
+<rest:request>
+	<rest:get>/bye</rest:get>
 </rest:request>		
 		</f:fixture>
-		Then request has been sent to <code c:set="#url">/hello</code> with body 
-		equal to <code c:assertEquals="requestBodyFor(#url)">{ "name" : "World" }</code>
-	</div>
-	
+		Then request has been sent to <code c:set="#url">/bye</code> with header 
+		<b c:set="#headerName">X-Name</b> equal to <code c:assertEquals="requestHeaderValueFor(#url, #headerName)">(null)</code>
+	</div> 	
+
 </body>
 </html>

@@ -2,6 +2,7 @@ package pl.pragmatists.concordion.rest;
 
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
+import org.concordion.api.Element;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 
@@ -16,7 +17,10 @@ public class HttpMethodCommand extends AbstractCommand {
     @Override
     public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
-        String url = commandCall.getElement().getText();
+        Element element = commandCall.getElement();
+        element.addStyleClass(method.toLowerCase());
+        
+        String url = element.getText();
         RequestExecutor.fromEvaluator(evaluator)
             .method(method)
             .url(url);

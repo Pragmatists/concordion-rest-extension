@@ -13,7 +13,8 @@ public class RequestExecutor {
     
     private String url;
     private String method;
-    private static final String REQUEST_EXECUTOR_VARIABLE = "#request";
+    
+    protected static final String REQUEST_EXECUTOR_VARIABLE = "#request";
 
     public RequestExecutor() {
         request = RestAssured.given();
@@ -80,9 +81,19 @@ public class RequestExecutor {
         
         RequestExecutor variable = (RequestExecutor) evaluator.getVariable(REQUEST_EXECUTOR_VARIABLE);
         if(variable == null){
-            variable = new RequestExecutor();
-            evaluator.setVariable(REQUEST_EXECUTOR_VARIABLE, variable);
+            variable = newExecutor(evaluator);
         }
         return variable;
+    }
+
+    public static RequestExecutor newExecutor(Evaluator evaluator) {
+        RequestExecutor variable = new RequestExecutor();
+        evaluator.setVariable(REQUEST_EXECUTOR_VARIABLE, variable);
+        return variable;
+    }
+
+    public boolean wasSuccessfull() {
+        int statusCode = response.getStatusCode();
+        return statusCode >= 200 && statusCode < 400;
     }
 }

@@ -12,12 +12,35 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.listener.DocumentParsingListener;
 
-public class RestExtension implements ConcordionExtension{
+import pl.pragmatists.concordion.rest.bootstrap.BootstrapExtension;
+import pl.pragmatists.concordion.rest.codemirror.CodeMirrorExtension;
+
+public class RestExtension implements ConcordionExtension {
 
     public static final String REST_EXTENSION_NS = "http://pragmatists.github.io/concordion-rest-extension";
 
+    private boolean codeMirrorEnabled = false;
+    private boolean includeBootstrap = false;
+    
+    public RestExtension enableCodeMirror(){
+        codeMirrorEnabled = true;
+        return this;
+    }
+
+    public RestExtension includeBoostrap(){
+        includeBootstrap = true;
+        return this;
+    }
+    
     @Override
     public void addTo(ConcordionExtender concordionExtender) {
+        
+        if(codeMirrorEnabled){
+            new CodeMirrorExtension().addTo(concordionExtender);
+        }
+        if(includeBootstrap){
+            new BootstrapExtension().addTo(concordionExtender);
+        }
         
         concordionExtender.withCommand(REST_EXTENSION_NS, "request", new RequestCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "get", new HttpMethodCommand("GET"));
@@ -28,8 +51,9 @@ public class RestExtension implements ConcordionExtension{
         concordionExtender.withCommand(REST_EXTENSION_NS, "jsonBody", new JsonBodyCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "setHeader", new SetHeaderCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "status", new ExpectedStatusCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "success", new ExpectedSuccessCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "header", new ExpectedHeaderCommand());
-        concordionExtender.withCommand(REST_EXTENSION_NS, "jsonResponse", new ExpectedJsonResponseCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "jsonResponse", new ExpectedJsonResponseCommand());              
         
         concordionExtender.withDocumentParsingListener(new DocumentParsingListener() {
             
@@ -43,6 +67,7 @@ public class RestExtension implements ConcordionExtension{
                 put("jsonBody", "pre");
                 put("setHeader", "code");
                 put("status", "code");
+                put("success", "span");
                 put("header", "code");
                 put("jsonResponse", "pre");
             }};
@@ -76,7 +101,5 @@ public class RestExtension implements ConcordionExtension{
             }
         });
     }
-
-    
     
 }

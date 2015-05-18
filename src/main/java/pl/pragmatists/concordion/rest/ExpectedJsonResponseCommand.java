@@ -13,8 +13,9 @@ import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.AssertEqualsListener;
 import org.concordion.api.listener.AssertFailureEvent;
 import org.concordion.api.listener.AssertSuccessEvent;
-import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.util.Announcer;
+
+import pl.pragmatists.concordion.rest.util.JsonPrettyPrinter;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -104,16 +105,22 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
     
     public ExpectedJsonResponseCommand() {
-        listeners.addListener(new AssertResultRenderer());
+        listeners.addListener(new RestResultRenderer());
     }
 
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
 
         Element element = commandCall.getElement();
-
-        String actual = RequestExecutor.fromEvaluator(evaluator).getBody();
+        element.addStyleClass("json");
+        
+        JsonPrettyPrinter printer = new JsonPrettyPrinter();
+        
+        String expected = printer.prettyPrint(element.getText());
+        element.moveChildrenTo(new Element("tmp"));
+        element.appendText(expected);
+        
         String mode = modeFrom(element);
-        String expected = element.getText();
+        String actual = printer.prettyPrint(RequestExecutor.fromEvaluator(evaluator).getBody());
 
         try {
             if (comparator(mode).assertEqualsJson(actual, expected)) {

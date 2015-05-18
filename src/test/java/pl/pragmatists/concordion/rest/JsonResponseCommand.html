@@ -24,10 +24,11 @@
 		<div f:assertHtmlIncludes="#result" class="concordion-output">
 <div>
 	<code>/hello</code>
-	<pre class="failure">
-<del class="expected">{ "greeting": "Hello World" }</del>
-<ins class="actual">(not set)</ins>	
-	</pre>
+	<pre class="rest-failure json">
+<del class="expected">{ 
+  "greeting" : "Hello World" 
+}</del>
+<ins class="actual">(not set)</ins></pre>
 </div>			
 		</div> 
 	</div>
@@ -48,10 +49,13 @@
 		<div f:assertHtmlIncludes="#result" class="concordion-output">
 <div>
 	<code>/hello</code>
-	<pre class="failure">
-<del class="expected">{ "greeting": "Hello World" }</del>
-<ins class="actual">{ "greeting": "Hello You" }</ins>	
-	</pre>
+	<pre class="rest-failure json">
+<del class="expected">{ 
+  "greeting" : "Hello World" 
+}</del>
+<ins class="actual">{ 
+  "greeting" : "Hello You" 
+}</ins></pre>
 </div>				
 		</div> 
 	</div>
@@ -72,9 +76,10 @@
 		<div f:assertHtmlIncludes="#result" class="concordion-output">
 <div>
 	<code>/hello</code>
-	<pre class="success">
-{ "greeting": "Hello World" }
-	</pre>
+	<pre class="rest-success json">
+{ 
+  "greeting" : "Hello World" 
+}</pre>
 </div>			
 		</div> 
 	</div>

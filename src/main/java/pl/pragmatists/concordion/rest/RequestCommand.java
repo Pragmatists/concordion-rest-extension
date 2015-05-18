@@ -17,14 +17,15 @@ public class RequestCommand extends AbstractCommand {
     @Override
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
-        RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
+        RequestExecutor request = RequestExecutor.newExecutor(evaluator);
         
         CommandCallList childCommands = commandCall.getChildren();
         childCommands.setUp(evaluator, resultRecorder);
         
+        childCommands.execute(evaluator, resultRecorder);
+
         request.execute();
         
-        childCommands.execute(evaluator, resultRecorder);
         announceExecuteCompleted(commandCall.getElement());
         childCommands.verify(evaluator, resultRecorder);
     }

@@ -21,6 +21,8 @@ public class SetHeaderCommand extends AbstractCommand {
     public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
         Element element = commandCall.getElement();
+        element.addStyleClass("set-header");
+        
         String headerValue = element.getText();
         RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
         String headerName = element.getAttributeValue("name");

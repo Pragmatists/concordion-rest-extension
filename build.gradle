@@ -1,8 +1,33 @@
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 repositories {
     jcenter()
     mavenCentral()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'pl.pragmatists'
+            artifactId 'concordion-rest-extension'
+            version '0.5.0'
+
+            from components.java
+        }
+    }
+}
+
+sourceSets {
+    test {
+        resources.srcDir file('src/test/java')
+    }
+}
+
+test {
+    group 'Concordion tests'
+    description = "Run Concordion"
+    systemProperty 'concordion.output.dir', "$buildDir/reports/concordion"
 }
 
 dependencies {
@@ -21,8 +46,7 @@ dependencies {
     testCompile "junit:junit:4.11"
     testCompile "org.assertj:assertj-core:1.6.0"
     testCompile "com.jayway.jsonpath:json-path:0.9.1"
-    testCompile 'commons-io:commons-io:2.4'
-    
+    testCompile 'commons-io:commons-io:2.4'    
 }
 
 
