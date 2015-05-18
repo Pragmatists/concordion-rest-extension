@@ -1,0 +1,73 @@
+.concordion-output.output-success {
+	
+	background-color: #fff; 
+	border: 1px solid #666666; 
+	margin: 20px;
+	padding: 20px;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+	position: relative;	
+}
+
+.concordion-output .output-expected {
+	width: 40%; 
+	float:left; 
+	background-color: #fff; 
+	border: 1px solid #666666; 
+	margin: 20px;
+	padding: 20px;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+	position: relative;
+}
+
+.concordion-output .output-actual {
+	width: 40%; 
+	float:left; 
+	background-color: #fff; 
+	border: 1px solid #666666; 
+	margin: 20px;
+	padding: 20px;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+	position: relative;	
+}
+
+.concordion-output.output-success:after {
+	width: 100%;
+	height: 100%;
+	content: 'Success';
+	position: absolute;
+	top: 0px;
+	font-size: 300%;
+	left: 0px;
+	color: #393;
+	text-align: center;
+	vertical-align: middle;
+	background-color: rgba(0,255,0,0.2);
+}
+
+.concordion-output .output-expected:after {
+	width: 100%;
+	height: 100%;
+	content: 'Expected';
+	position: absolute;
+	top: 0px;
+	font-size: 300%;
+	left: 0px;
+	color: #933;
+	text-align: center;
+	vertical-align: middle;
+	background-color: rgba(255,0,0,0.2);	
+}
+
+.concordion-output .output-actual:after {
+	width: 100%;
+	height: 100%;
+	content: 'Actual';
+	position: absolute;
+	top: 0px;
+	font-size: 300%;
+	left: 0px;
+	color: #933;
+	text-align: center;
+	vertical-align: middle;
+	background-color: rgba(255,0,0,0.2);	
+}
