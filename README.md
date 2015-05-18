@@ -1,1 +1,0 @@
-# concordion-rest-extension
