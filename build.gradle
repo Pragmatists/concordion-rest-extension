@@ -33,16 +33,15 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile "org.concordion:concordion:1.4.6"
-    compile "com.jayway.restassured:rest-assured:2.4.0"
+    compile 'org.concordion:concordion:1.4.6'
+    compile 'com.jayway.restassured:rest-assured:2.4.0'
     compile 'xmlunit:xmlunit:1.6'
     compile 'commons-io:commons-io:2.4'
     
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.assertj:assertj-core:1.6.0'
+    testCompile 'com.jayway.jsonpath:json-path:0.9.1'
     testCompile 'com.github.tomakehurst:wiremock:1.53'
-    
-    testCompile "junit:junit:4.11"
-    testCompile "org.assertj:assertj-core:1.6.0"
-    testCompile "com.jayway.jsonpath:json-path:0.9.1"
 }
 
 githubPages {
