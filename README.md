@@ -5,3 +5,12 @@
 
 ## Demo project:
 [http://github.com/Pragmatists/concordion-rest-extension-example/](http://github.com/Pragmatists/concordion-rest-extension-example/)
+
+## Maven artifact:
+```xml
+<dependency>
+	<groupId>pl.pragmatists</groupId>
+	<artifactId>concordion-rest-extension</artifactId>
+	<version>0.5.0</version>
+</dependency>
+```
