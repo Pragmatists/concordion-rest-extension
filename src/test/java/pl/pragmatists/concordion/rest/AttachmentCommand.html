@@ -1,0 +1,56 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>Attachment Command</h1>
+	<p>TODO</p>
+	
+	<div class="example">
+		<h3>Fails meaningfully if there was no attachment</h3>
+		Given there is resource at <code c:execute="respondOkFor(#TEXT)">/hello</code><br/>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:attachment>hello.txt</rest:attachment>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<code class="failure">
+		<del class="expected">hello.txt</del>
+		<ins class="actual">(no attachment)</ins>	
+	</code>
+</div>			
+		</div> 
+	</div>
+	
+	<div class="example">
+		<h3>Response body is saved in file and linked from spec</h3>
+		Given there is resource at <span c:execute="respondWithAttachment(#url, #attachment)"><code c:set="#url">/hello</code><br/>
+		<pre c:set="#attachment">Hello World!</pre></span>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:attachment>hello.txt</rest:attachment>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<code class="success"><a href="hello.txt">hello.txt</a></code>
+</div>			
+		</div>
+		And there <span c:execute="#content = readFile(#file)">should be file <b c:set="#file">/hello.txt</b> 
+		with content <pre c:assertEquals="#content">Hello World!</pre></span> 
+	</div>
+		
+</body>
+</html>

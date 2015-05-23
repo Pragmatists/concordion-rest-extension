@@ -1,16 +1,19 @@
 package pl.pragmatists.concordion.rest.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
 public class JsonPrettyPrinter {
 
     public String prettyPrint(String json){
         
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode tree = mapper.readTree(json);
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(tree);
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonElement element = gson.fromJson(json, JsonElement.class);
+            return gson.toJson(element);
+            
         } catch (Exception e) {
             return json;
         }

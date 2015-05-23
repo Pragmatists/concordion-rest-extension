@@ -1,0 +1,64 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+task sourcesJar (type : Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+	archives jar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+group = "pl.pragmatists"
+archivesBaseName = "concordion-rest-extension"
+version = "0.5.0"
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Concordion REST Extension'
+        packaging 'jar'
+        description 'Set of non-official extensions to Concordion (http://concordion.org/). It provides support for writing executable specifications for REST services.'
+        url 'http://github.com/Pragmatsits/concordion-rest-extension'
+
+        scm {
+          connection 'https://github.com/Pragmatists/concordion-rest-extension.git'
+          developerConnection 'https://github.com/Pragmatists/concordion-rest-extension.git'
+          url 'https://github.com/Pragmatists/concordion-rest-extension.git'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'mpi'
+            name 'Michał Piotrkowski'
+            email 'mpi.michal.piotrkowski@gmail.com'
+          }
+        }
+      }
+    }
+  }
+}

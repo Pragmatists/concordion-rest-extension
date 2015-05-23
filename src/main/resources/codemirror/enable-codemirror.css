@@ -13,7 +13,7 @@
 	position: absolute;
 }
 
-.json {
+.json, .xml {
 	background-color: #f8f8f8;
 }
 

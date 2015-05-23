@@ -15,6 +15,7 @@ public class CodeMirrorExtension implements ConcordionExtension {
         
         concordionExtender.withLinkedJavaScript("/codemirror/codemirror.js", new Resource("/codemirror/codemirror.js"));
         concordionExtender.withLinkedJavaScript("/codemirror/javascript.js", new Resource("/codemirror/javascript.js"));
+        concordionExtender.withLinkedJavaScript("/codemirror/xml.js", new Resource("/codemirror/xml.js"));
         concordionExtender.withLinkedJavaScript("/codemirror/diff_match_patch.js", new Resource("/codemirror/diff_match_patch.js"));
         concordionExtender.withLinkedJavaScript("/codemirror/merge.js", new Resource("/codemirror/merge.js"));
         concordionExtender.withLinkedJavaScript("/codemirror/enable-codemirror.js", new Resource("/codemirror/enable-codemirror.js"));

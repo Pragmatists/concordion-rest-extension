@@ -1,5 +1,6 @@
 package pl.pragmatists.concordion.rest;
 
+import java.io.StringReader;
 import java.util.Map.Entry;
 import java.util.Objects;
 
@@ -19,6 +20,7 @@ import pl.pragmatists.concordion.rest.util.JsonPrettyPrinter;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 public class ExpectedJsonResponseCommand extends AbstractCommand {
 
@@ -27,8 +29,8 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
         @Override
         public boolean assertEqualsJson(String actual, String expected) {
 
-            JsonElement actualJson = new JsonParser().parse(actual);
-            JsonElement expectedJson = new JsonParser().parse(expected);
+            JsonElement actualJson = parse(actual);
+            JsonElement expectedJson = parse(expected);
 
             return Objects.equals(actualJson, expectedJson);
         }
@@ -40,8 +42,8 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
         @Override
         public boolean assertEqualsJson(String actual, String expected) {
 
-            JsonElement actualJson = new JsonParser().parse(actual);
-            JsonElement expectedJson = new JsonParser().parse(expected);
+            JsonElement actualJson = parse(actual);
+            JsonElement expectedJson = parse(expected);
 
             return includesJson(actualJson, expectedJson);
         }
@@ -99,7 +101,12 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
     private interface JsonComparator {
 
         boolean assertEqualsJson(String actual, String expected);
+    }
 
+    private static JsonElement parse(String input) {
+        JsonReader reader = new JsonReader(new StringReader(input));
+        reader.setLenient(true);
+        return new JsonParser().parse(reader);
     }
 
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
@@ -120,19 +127,23 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
         element.appendText(expected);
         
         String mode = modeFrom(element);
-        String actual = printer.prettyPrint(RequestExecutor.fromEvaluator(evaluator).getBody());
+        String actual = RequestExecutor.fromEvaluator(evaluator).getBody();
+        String prettyActual = printer.prettyPrint(actual);
 
+        if (StringUtils.isEmpty(actual)){
+            jsonDoesNotEqual(resultRecorder, element, "(not set)", expected);
+            return;
+        }
+        
         try {
-            if (comparator(mode).assertEqualsJson(actual, expected)) {
+            if (comparator(mode).assertEqualsJson(prettyActual, expected)) {
                 jsonEquals(resultRecorder, element);
             } else {
-                if (StringUtils.isEmpty(actual))
-                    actual = "(not set)";
-                jsonDoesNotEqual(resultRecorder, element, actual, expected);
+                jsonDoesNotEqual(resultRecorder, element, prettyActual, expected);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            jsonError(resultRecorder, element, actual, expected);
+            jsonError(resultRecorder, element, prettyActual, expected);
         }
 
     }

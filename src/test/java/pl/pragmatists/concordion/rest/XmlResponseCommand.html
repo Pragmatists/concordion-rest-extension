@@ -6,7 +6,7 @@
 	>
 <body>
 	
-	<h1>JsonResponse Command</h1>
+	<h1>XML response Command</h1>
 	<p>TODO</p>
 	
 	<div class="example">
@@ -17,17 +17,16 @@
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
-	<rest:jsonResponse>{ "greeting": "Hello World" }</rest:jsonResponse>
+	<rest:xmlResponse><greeting>Hello, World!</greeting></rest:xmlResponse>
 </rest:request>		
 		</f:fixture>
 		Then it should produce following output: 
 		<div f:assertHtmlIncludes="#result" class="concordion-output">
 <div>
 	<code>/hello</code>
-	<pre class="rest-failure json">
-<del class="expected">{ 
-  "greeting": "Hello World" 
-}</del>
+	<pre class="rest-failure xml">
+<del class="expected">&lt;greeting&gt;Hello, World!&lt;/greeting&gt;
+</del>
 <ins class="actual">(not set)</ins></pre>
 </div>			
 		</div> 
@@ -37,25 +36,23 @@
 		<h3>Should fail if response body does not match</h3>
 		Given there is resource at <code c:set="#url">/hello</code><br/>
 		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
-		<pre c:set="#body">{ "greeting": "Hello You" }</pre></div><br/>
+		<pre c:set="#body">&lt;greeting&gt;Hello, You!&lt;/greeting&gt;</pre></div><br/>
 		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
-	<rest:jsonResponse>{ "greeting": "Hello World" }</rest:jsonResponse>
+	<rest:xmlResponse><greeting>Hello, World!</greeting></rest:xmlResponse>
 </rest:request>		
 		</f:fixture>
 		Then it should produce following output: 
 		<div f:assertHtmlIncludes="#result" class="concordion-output">
 <div>
 	<code>/hello</code>
-	<pre class="rest-failure json">
-<del class="expected">{ 
-  "greeting": "Hello World" 
-}</del>
-<ins class="actual">{ 
-  "greeting": "Hello You" 
-}</ins></pre>
+	<pre class="rest-failure xml">
+<del class="expected">&lt;greeting&gt;Hello, World!&lt;/greeting&gt;
+</del>
+<ins class="actual">&lt;greeting&gt;Hello, You!&lt;/greeting&gt;
+</ins></pre>
 </div>				
 		</div> 
 	</div>
@@ -64,22 +61,19 @@
 		<h3>Should be successful if body matches</h3>
 		Given there is resource at <code c:set="#url">/hello</code><br/>
 		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
-		<pre c:set="#body">{ "greeting": "Hello World" }</pre></div><br/>
+		<pre c:set="#body">&lt;greeting&gt;Hello, World!&lt;/greeting&gt;</pre></div><br/>
 		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
 	<rest:get>/hello</rest:get>
-	<rest:jsonResponse>{ "greeting": "Hello World" }</rest:jsonResponse>
+	<rest:xmlResponse><greeting>Hello, World!</greeting></rest:xmlResponse>
 </rest:request>		
 		</f:fixture>
 		Then it should produce following output: 
 		<div f:assertHtmlIncludes="#result" class="concordion-output">
 <div>
 	<code>/hello</code>
-	<pre class="rest-success json">
-{ 
-  "greeting": "Hello World" 
-}</pre>
+	<pre class="rest-success xml">&lt;greeting&gt;Hello, World!&lt;/greeting&gt;</pre>
 </div>			
 		</div> 
 	</div>

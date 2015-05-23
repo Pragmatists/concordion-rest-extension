@@ -54,6 +54,8 @@ public class RestExtension implements ConcordionExtension {
         concordionExtender.withCommand(REST_EXTENSION_NS, "success", new ExpectedSuccessCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "header", new ExpectedHeaderCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "jsonResponse", new ExpectedJsonResponseCommand());              
+        concordionExtender.withCommand(REST_EXTENSION_NS, "xmlResponse", new ExpectedXmlResponseCommand());              
+        concordionExtender.withCommand(REST_EXTENSION_NS, "attachment", new ExpectedAttachmentCommand(concordionExtender));
         
         concordionExtender.withDocumentParsingListener(new DocumentParsingListener() {
             
@@ -70,6 +72,8 @@ public class RestExtension implements ConcordionExtension {
                 put("success", "span");
                 put("header", "code");
                 put("jsonResponse", "pre");
+                put("xmlResponse", "pre");
+                put("attachment", "code");
             }};
 
             @Override

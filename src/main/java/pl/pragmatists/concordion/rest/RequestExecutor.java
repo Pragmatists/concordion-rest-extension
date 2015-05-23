@@ -1,5 +1,7 @@
 package pl.pragmatists.concordion.rest;
 
+import java.io.InputStream;
+
 import org.concordion.api.Evaluator;
 
 import com.jayway.restassured.RestAssured;
@@ -77,6 +79,10 @@ public class RequestExecutor {
         return response.body().asString();
     }
 
+    public InputStream getBodyAsInputStream() {
+        return response.asInputStream();
+    }
+
     public static RequestExecutor fromEvaluator(Evaluator evaluator) {
         
         RequestExecutor variable = (RequestExecutor) evaluator.getVariable(REQUEST_EXECUTOR_VARIABLE);
@@ -96,4 +102,5 @@ public class RequestExecutor {
         int statusCode = response.getStatusCode();
         return statusCode >= 200 && statusCode < 400;
     }
+
 }

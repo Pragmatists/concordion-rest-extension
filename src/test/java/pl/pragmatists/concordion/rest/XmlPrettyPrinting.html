@@ -1,0 +1,32 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:concordion="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>XML Pretty Printing</h1>
+	<p>TODO</p>
+	
+	<div class="example">
+		<h3>XML response is pretty printed</h3>
+		Given response body is <pre c:execute="setResponseBody(#TEXT)">
+&lt;root text="text" isUgly="true"&gt;&lt;inner&gt;description&lt;/inner&gt;&lt;empty&gt;&lt;/empty&gt;&lt;/root&gt;
+		</pre>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:xmlResponse><root text="text" isUgly="true"><inner>description</inner><empty></empty></root></rest:xmlResponse>
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+	<pre class="xml">
+&lt;root text="text" isUgly="true"&gt;
+  &lt;inner&gt;description&lt;/inner&gt;
+  &lt;empty/&gt;
+&lt;/root&gt;
+</pre>
+		</div> 
+	</div>
+</body>
+</html>

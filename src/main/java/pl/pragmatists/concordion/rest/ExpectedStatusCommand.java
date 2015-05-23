@@ -47,6 +47,4 @@ public class ExpectedStatusCommand extends AbstractCommand {
     private void announceFailure(Element element, String expected, Object actual) {
         listeners.announce().failureReported(new AssertFailureEvent(element, expected, actual));
     }
-
-    
 }
