@@ -27,7 +27,7 @@ public class RestExtension implements ConcordionExtension {
         return this;
     }
 
-    public RestExtension includeBoostrap(){
+    public RestExtension includeBootstrap(){
         includeBootstrap = true;
         return this;
     }
