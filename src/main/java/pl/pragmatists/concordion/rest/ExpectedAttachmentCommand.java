@@ -16,6 +16,8 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.listener.AssertEqualsListener;
 import org.concordion.api.listener.AssertFailureEvent;
 import org.concordion.api.listener.AssertSuccessEvent;
+import org.concordion.api.listener.ConcordionBuildEvent;
+import org.concordion.api.listener.ConcordionBuildListener;
 import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.util.Announcer;
 
@@ -26,7 +28,12 @@ public class ExpectedAttachmentCommand extends AbstractCommand {
     private Target target;
     
     public ExpectedAttachmentCommand(ConcordionExtender concordionExtender) {
-        concordionExtender.withBuildListener(event -> target = event.getTarget());
+        concordionExtender.withBuildListener(new ConcordionBuildListener() {
+            @Override
+            public void concordionBuilt(ConcordionBuildEvent event) {
+                target = event.getTarget();
+            }
+        });
         listeners.addListener(new AssertResultRenderer());
     }
     
