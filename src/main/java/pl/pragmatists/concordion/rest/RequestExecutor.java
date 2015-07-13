@@ -18,7 +18,7 @@ public class RequestExecutor {
     private String method;
     private String url;
     private String body;
-    private Map<String, String> headers = new HashMap<>();
+    private Map<String, String> headers = new HashMap<String, String>();
 
     protected static final String REQUEST_EXECUTOR_VARIABLE = "#request";
 
@@ -38,27 +38,27 @@ public class RequestExecutor {
     
     public void execute(){
 
-        switch (method) {
-        case "GET":
+        if("GET".equals(method)){
             response = request.get(url);
-            break;
-        case "POST":
-            response = request.post(url);
-            break;
-        case "PUT":
-            response = request.put(url);
-            break;
-        case "DELETE":
-            response = request.delete(url);
-            break;
-        case "PATCH":
-            response = request.patch(url);
-            break;
-        default:
-            break;
+            return;
         }
-        
-
+        if("POST".equals(method)){
+            response = request.post(url);
+            return;
+        }
+        if("PUT".equals(method)){
+            response = request.put(url);
+            return;
+        }
+        if("DELETE".equals(method)){
+            response = request.delete(url);
+            return;
+        }
+        if("PATCH".equals(method)){
+            response = request.patch(url);
+            return;
+        }
+         
     }
 
     public RequestExecutor header(String headerName, String headerValue) {

@@ -2,7 +2,6 @@ package pl.pragmatists.concordion.rest;
 
 import java.io.StringReader;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.concordion.api.AbstractCommand;
@@ -32,7 +31,7 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
             JsonElement actualJson = parse(actual);
             JsonElement expectedJson = parse(expected);
 
-            return Objects.equals(actualJson, expectedJson);
+            return actualJson.equals(expectedJson);
         }
 
     }
@@ -149,11 +148,16 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
     }
 
     private JsonComparator comparator(String mode) {
-        switch (mode) {
-        case "includes": return new IncludesJsonComparator();
-        case "equals": return new EqualsJsonComparator();
-        default : throw new IllegalArgumentException();
+        
+        if("includes".equals(mode)){
+            return new IncludesJsonComparator();
         }
+
+        if("equals".equals(mode)){
+            return new EqualsJsonComparator();
+        }
+        
+        throw new IllegalArgumentException("Invalid comparition mode: " + mode);
     }
 
     private String modeFrom(Element element) {

@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'org.ajoberstar.github-pages'
 apply plugin: "maven"
 
-//apply from: 'publish.gradle'
+apply from: 'publish.gradle'
 
 buildscript {
     repositories {
@@ -49,6 +49,9 @@ dependencies {
     testCompile 'com.jayway.jsonpath:json-path:0.9.1'
     testCompile 'com.github.tomakehurst:wiremock:1.53'
 }
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
 githubPages {
     repoUri = 'git@github.com:Pragmatists/concordion-rest-extension.git'
