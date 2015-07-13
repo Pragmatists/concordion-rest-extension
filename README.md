@@ -11,6 +11,6 @@
 <dependency>
 	<groupId>pl.pragmatists</groupId>
 	<artifactId>concordion-rest-extension</artifactId>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 </dependency>
 ```
