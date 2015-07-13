@@ -1,6 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'org.ajoberstar.github-pages'
-apply from: 'publish.gradle'
+apply plugin: "maven"
+
+//apply from: 'publish.gradle'
 
 buildscript {
     repositories {
@@ -12,9 +14,13 @@ buildscript {
     }
 }
 
+group = "pl.pragmatists"
+version = "0.5.1"
+
 repositories {
     jcenter()
     mavenCentral()
+    mavenLocal()
 }
 
 sourceSets {

@@ -1,6 +1,8 @@
 package pl.pragmatists.concordion.rest;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.concordion.api.Evaluator;
 
@@ -12,14 +14,16 @@ public class RequestExecutor {
     
     private RequestSpecification request;
     private Response response;
-    
-    private String url;
+
     private String method;
-    
+    private String url;
+    private String body;
+    private Map<String, String> headers = new HashMap<>();
+
     protected static final String REQUEST_EXECUTOR_VARIABLE = "#request";
 
     public RequestExecutor() {
-        request = RestAssured.given();
+        request = RestAssured.given().log().all(true);
     }
     
     public RequestExecutor method(String method) {
@@ -54,10 +58,11 @@ public class RequestExecutor {
             break;
         }
         
-        
+
     }
 
     public RequestExecutor header(String headerName, String headerValue) {
+        headers.put(headerName, headerValue);
         request.header(headerName, headerValue);
         return this;
     }
@@ -71,6 +76,7 @@ public class RequestExecutor {
     }
 
     public RequestExecutor body(String body) {
+        this.body = body;
         request.body(body);
         return this;
     }
@@ -101,6 +107,22 @@ public class RequestExecutor {
     public boolean wasSuccessfull() {
         int statusCode = response.getStatusCode();
         return statusCode >= 200 && statusCode < 400;
+    }
+
+    public String getRequestUrl(){
+        return url;
+    }
+
+    public String getRequestMethod(){
+        return method;
+    }
+
+    public String getRequestBody(){
+        return body;
+    }
+
+    public String getRequestHeader(String header){
+        return headers.get(header);
     }
 
 }

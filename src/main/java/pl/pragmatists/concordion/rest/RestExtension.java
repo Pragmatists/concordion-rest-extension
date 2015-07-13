@@ -3,15 +3,16 @@ package pl.pragmatists.concordion.rest;
 import java.util.HashMap;
 import java.util.Map;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Elements;
-
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.listener.DocumentParsingListener;
 
+import com.jayway.restassured.RestAssured;
+
+import nu.xom.Attribute;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
 import pl.pragmatists.concordion.rest.bootstrap.BootstrapExtension;
 import pl.pragmatists.concordion.rest.codemirror.CodeMirrorExtension;
 
@@ -21,7 +22,9 @@ public class RestExtension implements ConcordionExtension {
 
     private boolean codeMirrorEnabled = false;
     private boolean includeBootstrap = false;
-    
+    private int port = 8080;
+    private String host = "localhost";
+
     public RestExtension enableCodeMirror(){
         codeMirrorEnabled = true;
         return this;
@@ -31,7 +34,17 @@ public class RestExtension implements ConcordionExtension {
         includeBootstrap = true;
         return this;
     }
-    
+
+    public RestExtension host(String host){
+        RestAssured.baseURI = host;
+        return this;
+    }
+
+    public RestExtension port(int port){
+        RestAssured.port = port;
+        return this;
+    }
+
     @Override
     public void addTo(ConcordionExtender concordionExtender) {
         
@@ -101,7 +114,8 @@ public class RestExtension implements ConcordionExtension {
             }
 
             private String translateTag(String localName) {
-                return tags.getOrDefault(localName, localName);
+                String name = tags.get(localName);
+                return name == null ? localName : name;
             }
         });
     }
