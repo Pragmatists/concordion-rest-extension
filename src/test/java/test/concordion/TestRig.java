@@ -1,6 +1,8 @@
 package test.concordion;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.concordion.Concordion;
 import org.concordion.api.Evaluator;
@@ -8,6 +10,7 @@ import org.concordion.api.EvaluatorFactory;
 import org.concordion.api.Resource;
 import org.concordion.api.ResultSummary;
 import org.concordion.api.Source;
+import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.internal.ConcordionBuilder;
 import org.concordion.internal.SimpleEvaluator;
 
@@ -20,6 +23,7 @@ public class TestRig implements EvaluatorFactory {
     private Source source = stubSource;
     private StubTarget stubTarget = new StubTarget();
     private String namespaceDeclaration = "xmlns:concordion='" + ConcordionBuilder.NAMESPACE_CONCORDION_2007 + "'";
+    private List<ConcordionExtension> extensions = new ArrayList<ConcordionExtension>();
 
     public TestRig withFixture(Object fixture) {
         this.fixture = fixture;
@@ -42,13 +46,19 @@ public class TestRig implements EvaluatorFactory {
 
     public ProcessingResult process(Resource resource) {
         EventRecorder eventRecorder = new EventRecorder();
-        Concordion concordion = new ConcordionBuilder()
+        
+        ConcordionBuilder builder = new ConcordionBuilder()
             .withAssertEqualsListener(eventRecorder)
             .withThrowableListener(eventRecorder)
             .withSource(source)
             .withEvaluatorFactory(this)
-            .withTarget(stubTarget)
-            .build();
+            .withTarget(stubTarget);
+        
+        for (ConcordionExtension e : extensions) {
+            e.addTo(builder);
+        }
+        
+        Concordion concordion = builder.build();
         
         try {
             ResultSummary resultSummary = concordion.process(resource, fixture);
@@ -98,6 +108,11 @@ public class TestRig implements EvaluatorFactory {
     @Override
     public Evaluator createEvaluator(Object fixture) {       
         return evaluator;
+    }
+
+    public TestRig withExtension(ConcordionExtension extension) {
+        extensions.add(extension);
+        return this;
     }
 
 }

@@ -3,16 +3,15 @@ package pl.pragmatists.concordion.rest;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.concordion.api.extension.ConcordionExtender;
-import org.concordion.api.extension.ConcordionExtension;
-import org.concordion.api.listener.DocumentParsingListener;
-
-import com.jayway.restassured.RestAssured;
-
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
+
+import org.concordion.api.extension.ConcordionExtender;
+import org.concordion.api.extension.ConcordionExtension;
+import org.concordion.api.listener.DocumentParsingListener;
+
 import pl.pragmatists.concordion.rest.bootstrap.BootstrapExtension;
 import pl.pragmatists.concordion.rest.codemirror.CodeMirrorExtension;
 
@@ -20,42 +19,51 @@ public class RestExtension implements ConcordionExtension {
 
     public static final String REST_EXTENSION_NS = "http://pragmatists.github.io/concordion-rest-extension";
 
-    private boolean codeMirrorEnabled = false;
-    private boolean includeBootstrap = false;
-    private int port = 8080;
-    private String host = "localhost";
+    static class Config {
+        
+        boolean codeMirrorEnabled = false;
+        boolean includeBootstrap = false;
+        int port = 8080;
+        String host = "http://localhost";
+        boolean enablePlaceholders = true;
+    }
+
+    private Config config = new Config();
 
     public RestExtension enableCodeMirror(){
-        codeMirrorEnabled = true;
+        config.codeMirrorEnabled = true;
         return this;
     }
 
     public RestExtension includeBootstrap(){
-        includeBootstrap = true;
+        config.includeBootstrap = true;
         return this;
     }
 
     public RestExtension host(String host){
-        RestAssured.baseURI = host;
+        if(!host.startsWith("http")){
+            host = "http://" + host;
+        }
+        config.host = host;
         return this;
     }
 
     public RestExtension port(int port){
-        RestAssured.port = port;
+        config.port = port;
         return this;
     }
 
     @Override
     public void addTo(ConcordionExtender concordionExtender) {
         
-        if(codeMirrorEnabled){
+        if(config.codeMirrorEnabled){
             new CodeMirrorExtension().addTo(concordionExtender);
         }
-        if(includeBootstrap){
+        if(config.includeBootstrap){
             new BootstrapExtension().addTo(concordionExtender);
         }
         
-        concordionExtender.withCommand(REST_EXTENSION_NS, "request", new RequestCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "request", new RequestCommand(config));
         concordionExtender.withCommand(REST_EXTENSION_NS, "get", new HttpMethodCommand("GET"));
         concordionExtender.withCommand(REST_EXTENSION_NS, "post", new HttpMethodCommand("POST"));
         concordionExtender.withCommand(REST_EXTENSION_NS, "put", new HttpMethodCommand("PUT"));
@@ -119,5 +127,10 @@ public class RestExtension implements ConcordionExtension {
             }
         });
     }
-    
+
+    public RestExtension disablePlaceholders() {
+        config.enablePlaceholders = false;
+        return this;
+    }
+        
 }

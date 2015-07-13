@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.concordion.api.Evaluator;
 
+import pl.pragmatists.concordion.rest.RestExtension.Config;
+
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -21,11 +23,18 @@ public class RequestExecutor {
     private Map<String, String> headers = new HashMap<String, String>();
 
     protected static final String REQUEST_EXECUTOR_VARIABLE = "#request";
-
-    public RequestExecutor() {
-        request = RestAssured.given().log().all(true);
-    }
     
+    private Config config;
+
+    public RequestExecutor(Config config) {
+        request = RestAssured.given()
+                .port(config.port)
+                .baseUri(config.host)
+                .log()
+                .all(true);
+        this.config = config;
+    }
+
     public RequestExecutor method(String method) {
         this.method = method;
         return this;
@@ -68,7 +77,7 @@ public class RequestExecutor {
     }
 
     public String getHeader(String attributeValue) {
-        return response.getHeader(attributeValue);
+        return replacePlaceholdersIfNeeded(response.getHeader(attributeValue));
     }
 
     public String getStatusLine() {
@@ -82,7 +91,33 @@ public class RequestExecutor {
     }
 
     public String getBody() {
-        return response.body().asString();
+        return replacePlaceholdersIfNeeded(response.body().asString());
+    }
+
+    private String replacePlaceholdersIfNeeded(String string) {
+        
+        if(string == null){
+            return null;
+        }
+        
+        if(config.enablePlaceholders){
+
+            string = replaceWith(string, "https://" + config.host + ":" + config.port, "https://{host:port}");
+            string = replaceWith(string, "https://" + config.host, "https://{host}");
+
+            string = replaceWith(string, "http://" + config.host + ":" + config.port, "http://{host:port}");
+            string = replaceWith(string, "http://" + config.host, "http://{host}");
+
+            if(response.getSessionId() != null){
+                string = replaceWith(string, response.getSessionId(), "{sessionId}");
+            }
+        }
+        
+        return string;
+    }
+
+    private String replaceWith(String string, String replace, String replacement) {
+        return string.replaceAll(replace, replacement);
     }
 
     public InputStream getBodyAsInputStream() {
@@ -90,16 +125,12 @@ public class RequestExecutor {
     }
 
     public static RequestExecutor fromEvaluator(Evaluator evaluator) {
-        
-        RequestExecutor variable = (RequestExecutor) evaluator.getVariable(REQUEST_EXECUTOR_VARIABLE);
-        if(variable == null){
-            variable = newExecutor(evaluator);
-        }
-        return variable;
+        return (RequestExecutor) evaluator.getVariable(REQUEST_EXECUTOR_VARIABLE);
     }
-
-    public static RequestExecutor newExecutor(Evaluator evaluator) {
-        RequestExecutor variable = new RequestExecutor();
+    
+    public static RequestExecutor newExecutor(Evaluator evaluator, Config config) {
+        
+        RequestExecutor variable = new RequestExecutor(config);
         evaluator.setVariable(REQUEST_EXECUTOR_VARIABLE, variable);
         return variable;
     }

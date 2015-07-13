@@ -1,0 +1,30 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>Cusomizing Host and Port</h1>
+	<p>Default host and port can be customized by using methods on <code>RestExtension</code> class.</p>
+	
+	<div class="example">
+		<h3>Configure default host and port</h3>
+		Given you include following options in your fixture class:
+		<pre>
+@Extension		
+public RestExtension extension = new RestExtension().host("<b c:execute="setHost(#TEXT)">127.0.0.1</b>").port(<b c:execute="setPort(#TEXT)">9876</b>);
+		</pre>
+		When you run following fixture:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+</rest:request>		
+		</f:fixture>
+		Then <span c:execute="#sent = requestSentTo(#method, #url)">
+		<b c:set="#method">GET</b> request to <code c:set="#url">/hello</code> has been sent
+		to <b c:assertEquals="#sent.absoluteUrl">http://127.0.0.1:9876/hello</b>
+		</span>
+	</div>
+</body>
+</html>

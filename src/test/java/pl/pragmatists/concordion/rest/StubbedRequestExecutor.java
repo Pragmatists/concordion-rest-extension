@@ -2,7 +2,13 @@ package pl.pragmatists.concordion.rest;
 
 import org.concordion.api.Evaluator;
 
+import pl.pragmatists.concordion.rest.RestExtension.Config;
+
 public class StubbedRequestExecutor extends RequestExecutor {
+
+    public StubbedRequestExecutor() {
+        super(new Config());
+    }
 
     private String body; 
     
