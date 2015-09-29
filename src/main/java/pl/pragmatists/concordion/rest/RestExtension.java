@@ -20,17 +20,16 @@ public class RestExtension implements ConcordionExtension {
     public static final String REST_EXTENSION_NS = "http://pragmatists.github.io/concordion-rest-extension";
 
     static class Config {
-
+        
         boolean codeMirrorEnabled = false;
-
         boolean includeBootstrap = false;
-
         int port = 8080;
         String host = "http://localhost";
         boolean enablePlaceholders = true;
-        boolean urlEncodingEnabled = true;
     }
+
     private Config config = new Config();
+
     public RestExtension enableCodeMirror(){
         config.codeMirrorEnabled = true;
         return this;
@@ -56,14 +55,14 @@ public class RestExtension implements ConcordionExtension {
 
     @Override
     public void addTo(ConcordionExtender concordionExtender) {
-
+        
         if(config.codeMirrorEnabled){
             new CodeMirrorExtension().addTo(concordionExtender);
         }
         if(config.includeBootstrap){
             new BootstrapExtension().addTo(concordionExtender);
         }
-
+        
         concordionExtender.withCommand(REST_EXTENSION_NS, "request", new RequestCommand(config));
         concordionExtender.withCommand(REST_EXTENSION_NS, "get", new HttpMethodCommand("GET"));
         concordionExtender.withCommand(REST_EXTENSION_NS, "post", new HttpMethodCommand("POST"));
@@ -75,12 +74,12 @@ public class RestExtension implements ConcordionExtension {
         concordionExtender.withCommand(REST_EXTENSION_NS, "status", new ExpectedStatusCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "success", new ExpectedSuccessCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "header", new ExpectedHeaderCommand());
-        concordionExtender.withCommand(REST_EXTENSION_NS, "jsonResponse", new ExpectedJsonResponseCommand());
-        concordionExtender.withCommand(REST_EXTENSION_NS, "xmlResponse", new ExpectedXmlResponseCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "jsonResponse", new ExpectedJsonResponseCommand());              
+        concordionExtender.withCommand(REST_EXTENSION_NS, "xmlResponse", new ExpectedXmlResponseCommand());              
         concordionExtender.withCommand(REST_EXTENSION_NS, "attachment", new ExpectedAttachmentCommand(concordionExtender));
-
+        
         concordionExtender.withDocumentParsingListener(new DocumentParsingListener() {
-
+            
             private Map<String, String> tags = new HashMap<String, String>(){{
                 put("request", "div");
                 put("get", "code");
@@ -100,18 +99,18 @@ public class RestExtension implements ConcordionExtension {
 
             @Override
             public void beforeParsing(Document document) {
-
+           
                 visit(document.getRootElement());
-
+                
             }
 
             private void visit(Element elem) {
-
+                
                 Elements children = elem.getChildElements();
                 for(int i=0; i<children.size(); i++){
                     visit(children.get(i));
                 }
-
+                
                 if(RestExtension.REST_EXTENSION_NS.equals(elem.getNamespaceURI())){
                     Attribute attr = new Attribute(elem.getLocalName(), "");
                     attr.setNamespace("r", REST_EXTENSION_NS);
@@ -133,15 +132,5 @@ public class RestExtension implements ConcordionExtension {
         config.enablePlaceholders = false;
         return this;
     }
-
-    public RestExtension disableUrlEncoding() {
-        config.urlEncodingEnabled = false;
-        return this;
-    }
-
-    public RestExtension enableUrlEncoding() {
-        config.urlEncodingEnabled = true;
-        return this;
-    }
-
+        
 }
