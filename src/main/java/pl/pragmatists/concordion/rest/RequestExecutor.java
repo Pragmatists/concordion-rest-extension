@@ -28,6 +28,7 @@ public class RequestExecutor {
 
     public RequestExecutor(Config config) {
         request = RestAssured.given()
+                .urlEncodingEnabled(false)
                 .port(config.port)
                 .baseUri(config.host)
                 .log()
