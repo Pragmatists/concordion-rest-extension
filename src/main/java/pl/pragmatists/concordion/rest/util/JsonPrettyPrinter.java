@@ -10,7 +10,7 @@ public class JsonPrettyPrinter {
         
         try {
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
             JsonElement element = gson.fromJson(json, JsonElement.class);
             return gson.toJson(element);
             

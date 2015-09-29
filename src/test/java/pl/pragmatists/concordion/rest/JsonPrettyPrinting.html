@@ -13,7 +13,7 @@
 		<h3>Json body is pretty printed</h3>
 		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
-<rest:jsonBody>{ "text":"text","isUgly":   true, "arrayPrimitieves": ["one", 2, 3], "arrayObjects": [{"three": 3}, {"two":2}]  }</rest:jsonBody>
+<rest:jsonBody>{ "text":"text","isUgly":   true, "arrayPrimitieves": ["one", 2, 3], "arrayObjects": [{"three": 3}, {"two":2}, {"nullValue": null}]  }</rest:jsonBody>
 		</f:fixture>
 		Then it should produce following output: 
 		<div f:assertHtmlIncludes="#result" class="concordion-output">
@@ -32,7 +32,10 @@
     }, 
     {
       "two": 2
-    } 
+    },
+    {
+      "nullValue": null
+    }
   ]
 }</pre>
 		</div> 
