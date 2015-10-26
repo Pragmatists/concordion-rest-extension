@@ -19,7 +19,8 @@ public class JsonPrettyPrinter {
     }
     
     private class Parser {
-        
+
+        private static final String ESCAPE_CHARACTER = "\\";
         private Scanner scanner;
         private StringBuilder result;
         private int indent = 0;
@@ -48,7 +49,6 @@ public class JsonPrettyPrinter {
                             append("{");
                             enterState(State.OBJECT);
                         } else {
-                            skipUnitl("}");
                             append("{}");
                             consumeToken();
                         }
@@ -140,10 +140,15 @@ public class JsonPrettyPrinter {
         }
 
         private void eatUnitl(String desiredToken) {
+
+            String prev = "";
+
             while(scanner.hasNext()){
+
                 String x = scanner.next();
                 result.append(x);
-                if(x.equals(desiredToken)) break;
+                if(x.equals(desiredToken) && !prev.equals(ESCAPE_CHARACTER)) break;
+                prev = x;
             }
         }
 

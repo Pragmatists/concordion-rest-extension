@@ -15,7 +15,7 @@ buildscript {
 }
 
 group = "pl.pragmatists"
-version = "0.5.3"
+version = "0.5.4Fixed "
 
 repositories {
     jcenter()

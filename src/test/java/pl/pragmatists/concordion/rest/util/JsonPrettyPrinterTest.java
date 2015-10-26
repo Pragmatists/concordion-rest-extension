@@ -53,17 +53,35 @@ public class JsonPrettyPrinterTest {
         acualJson = "\" string \"";
         expectedJson = "\" string \"";
     }
-    
+
+    @Test
+    public void shouldHandleDoubleQuotedStringWithEscapedDoubleQuote() throws Exception {
+        acualJson = "\" string\\\" {  }\"";
+        expectedJson = "\" string\\\" {  }\"";
+    }
+
     @Test
     public void shouldHandleSingleQuotedString() throws Exception {
         acualJson = "' string '";
         expectedJson = "' string '";
     }
-    
+
+    @Test
+    public void shouldHandleSingleQuotedStringWithEscapedSingleQuote() throws Exception {
+        acualJson = "' string\\' {  }'";
+        expectedJson = "' string\\' {  }'";
+    }
+
     @Test
     public void shouldHandleEmptyObjectLiteral() throws Exception {
         acualJson = "{}";
         expectedJson = "{}";
+    }
+
+    @Test
+    public void shouldHandleEmptyObjectLiteralInsideObject() throws Exception {
+        acualJson = "{\"test\": {} }";
+        expectedJson = "{\n  \"test\": {}\n}";
     }
 
     @Test
