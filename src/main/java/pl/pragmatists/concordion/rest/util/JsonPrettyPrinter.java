@@ -152,13 +152,6 @@ public class JsonPrettyPrinter {
             }
         }
 
-        private void skipUnitl(String desiredToken) {
-            while(scanner.hasNext()){
-                String x = scanner.next();
-                if(x.equals(desiredToken)) break;
-            }
-        }
-
         private void shrinkIndent() {
             indent--;
             if(leaveState() == State.OBJECT){
