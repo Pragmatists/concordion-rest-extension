@@ -11,22 +11,31 @@ import org.concordion.internal.util.Announcer;
 
 public class SetHeaderCommand extends AbstractCommand {
 
-    private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
-    
-    public SetHeaderCommand() {
-        listeners.addListener(new AssertResultRenderer());
+  private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
+
+  public SetHeaderCommand() {
+    listeners.addListener(new AssertResultRenderer());
+  }
+
+  @Override
+  public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+
+    Element element = commandCall.getElement();
+    element.addStyleClass("set-header");
+
+    String headerValue = element.getText();
+    String variable = element.getAttributeValue("variable");
+    if (variable != null)
+    {
+      headerValue = headerValue.replaceAll(variable, (String) evaluator.getVariable(variable));
     }
     
-    @Override
-    public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-        
-        Element element = commandCall.getElement();
-        element.addStyleClass("set-header");
-        
-        String headerValue = element.getText();
-        RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
-        String headerName = element.getAttributeValue("name");
-        request.header(headerName, headerValue);
-    }
+    element.moveChildrenTo(new Element("tmp"));
+    element.appendText(headerValue);    
     
+    RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
+    String headerName = element.getAttributeValue("name");
+    request.header(headerName, headerValue);
+  }
+
 }

@@ -3,6 +3,7 @@ window.addEventListener('load', ready, false);
 function ready(){
 	
 	enableCodeMirror('.json:not(.rest-failure)', {name: 'javascript', json: true});
+	enableCodeMirror('.form-body', {name: 'javascript', json: true});
 	enableCodeMirrorMerge('.json.rest-failure', {name: 'javascript', json: true});
 	enableCodeMirror('.xml:not(.rest-failure)', 'application/xml');
 	enableCodeMirrorMerge('.xml.rest-failure', 'application/xml');
