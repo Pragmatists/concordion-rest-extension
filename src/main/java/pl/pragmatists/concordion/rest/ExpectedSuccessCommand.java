@@ -14,31 +14,31 @@ import org.concordion.internal.util.Announcer;
 
 public class ExpectedSuccessCommand extends AbstractCommand {
 
-    private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
-    
-    public ExpectedSuccessCommand() {
-        listeners.addListener(new AssertResultRenderer());
+  private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
+
+  public ExpectedSuccessCommand() {
+    listeners.addListener(new AssertResultRenderer());
+  }
+
+  @Override
+  public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+
+    String expectedStatus = commandCall.getElement().getText();
+    RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
+    String actualStatus = response.getStatusLine();
+    boolean wasSuccessfull = response.wasSuccessfull();
+
+    System.out.println("STATUS(Expected): success (200 -> 399)");
+    System.out.println("STATUS(Actual): " + actualStatus);
+
+    if(wasSuccessfull){
+      resultRecorder.record(Result.SUCCESS);
+      announceSuccess(commandCall.getElement());
+    } else {
+      resultRecorder.record(Result.FAILURE);
+      announceFailure(commandCall.getElement(), expectedStatus, actualStatus);
     }
-    
-    @Override
-    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-        
-        String expectedStatus = commandCall.getElement().getText();
-        RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
-        String actualStatus = response.getStatusLine();
-        boolean wasSuccessfull = response.wasSuccessfull();
-        
-        System.err.println("STATUS(Expected): success (200 -> 399)");
-        System.err.println("STATUS(Actual): " + actualStatus);
-        
-        if(wasSuccessfull){
-            resultRecorder.record(Result.SUCCESS);
-            announceSuccess(commandCall.getElement());
-        } else {
-            resultRecorder.record(Result.FAILURE);
-            announceFailure(commandCall.getElement(), expectedStatus, actualStatus);
-        }
-    }
+  }
 
     private void announceSuccess(Element element) {
         listeners.announce().successReported(new AssertSuccessEvent(element));

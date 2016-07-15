@@ -14,29 +14,29 @@ import org.concordion.internal.util.Announcer;
 
 public class ExpectedStatusCommand extends AbstractCommand {
 
-    private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
-    
-    public ExpectedStatusCommand() {
-        listeners.addListener(new AssertResultRenderer());
+  private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
+
+  public ExpectedStatusCommand() {
+    listeners.addListener(new AssertResultRenderer());
+  }
+
+  @Override
+  public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+
+    String expectedStatus = commandCall.getElement().getText();
+    RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
+    String actualStatus = response.getStatusLine();
+
+    System.out.println("STATUS(Expected): " + expectedStatus);
+    System.out.println("STATUS(Actual): " + actualStatus);
+
+    if(expectedStatus.equals(actualStatus)){
+      resultRecorder.record(Result.SUCCESS);
+      announceSuccess(commandCall.getElement());
+    } else {
+      resultRecorder.record(Result.FAILURE);
+      announceFailure(commandCall.getElement(), expectedStatus, actualStatus);
     }
-    
-    @Override
-    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-        
-        String expectedStatus = commandCall.getElement().getText();
-        RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
-        String actualStatus = response.getStatusLine();
-        
-        System.err.println("STATUS(Expected): " + expectedStatus);
-        System.err.println("STATUS(Actual): " + actualStatus);
-        
-        if(expectedStatus.equals(actualStatus)){
-            resultRecorder.record(Result.SUCCESS);
-            announceSuccess(commandCall.getElement());
-        } else {
-            resultRecorder.record(Result.FAILURE);
-            announceFailure(commandCall.getElement(), expectedStatus, actualStatus);
-        }
 
     }
 

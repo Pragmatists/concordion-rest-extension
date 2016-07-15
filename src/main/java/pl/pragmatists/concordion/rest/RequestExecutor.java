@@ -26,15 +26,19 @@ public class RequestExecutor {
     
     private Config config;
 
-    public RequestExecutor(Config config) {
-        request = RestAssured.given()
-                .urlEncodingEnabled(false)
-                .port(config.port)
-                .baseUri(config.host)
-                .log()
-                .all(true);
-        this.config = config;
-    }
+  public RequestExecutor(Config config) {
+    request = RestAssured.given()
+        .urlEncodingEnabled(false)
+        .port(config.port)
+        .baseUri(config.host)
+        .log()
+        .all(true);
+
+    if (config.host.startsWith("https"))
+      request.relaxedHTTPSValidation();
+
+    this.config = config;
+  }
 
     public RequestExecutor method(String method) {
         this.method = method;

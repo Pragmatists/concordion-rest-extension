@@ -1,0 +1,25 @@
+<html 
+	xmlns:c="http://www.concordion.org/2007/concordion"
+	xmlns:concordion="http://www.concordion.org/2007/concordion"
+	xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+	xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+	>
+<body>
+	
+	<h1>Set Form Body Command</h1>
+	
+	<div class="example">
+		<h3>Should send given form body</h3>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+			<rest:request>
+				<rest:post>/hello</rest:post>
+				<rest:formBody>name = World</rest:formBody>
+			</rest:request>		
+		</f:fixture>
+		Then request has been sent to <code c:set="#url">/hello</code> with body 
+		equal to <code c:assertEquals="requestBodyFor(#url)">name=World</code>
+	</div>
+	
+</body>
+</html>
