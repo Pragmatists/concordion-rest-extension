@@ -48,6 +48,46 @@
 </div>			
 		</div> 
 	</div>
-		
+
+	<div class="example">
+		<h3>Should ignore whitespaces around expected value</h3>
+		Given there is resource at <code c:execute="respondOkFor(#TEXT)">/hello</code><br/>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+			<rest:request>
+				<rest:get>/hello</rest:get>
+				<rest:status> HTTP/1.1 200 OK
+				</rest:status>
+			</rest:request>
+		</f:fixture>
+		Then it should produce following output:
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+			<div>
+				<code>/hello</code>
+				<code class="success">HTTP/1.1 200 OK</code>
+			</div>
+		</div>
+	</div>
+
+	<div class="example">
+		<h3>Should ignore whitespaces around actual value</h3>
+		Given there is resource at <span c:execute="respondFor(#url, #statusCode, #statusLine)"><code c:set="#url">/hello</code> responds with
+		<code>HTTP/1.1 <span c:set="#statusCode">200</span> <span c:set="#statusLine"></span></code></span><br/>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+			<rest:request>
+				<rest:get>/hello</rest:get>
+				<rest:status>HTTP/1.1 200</rest:status>
+			</rest:request>
+		</f:fixture>
+		Then it should produce following output:
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+			<div>
+				<code>/hello</code>
+				<code class="success">HTTP/1.1 200</code>
+			</div>
+		</div>
+	</div>
+
 </body>
 </html>

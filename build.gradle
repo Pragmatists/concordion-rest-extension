@@ -15,7 +15,7 @@ buildscript {
 }
 
 group = "pl.pragmatists"
-version = "0.5.4"
+version = "0.5.5"
 
 repositories {
     jcenter()
@@ -47,7 +47,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile 'org.assertj:assertj-core:1.6.0'
     testCompile 'com.jayway.jsonpath:json-path:0.9.1'
-    testCompile 'com.github.tomakehurst:wiremock:1.53'
+    testCompile 'com.github.tomakehurst:wiremock:2.4.1'
 }
 
 sourceCompatibility = 1.6

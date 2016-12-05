@@ -157,4 +157,7 @@ public class RequestExecutor {
         return headers.get(header);
     }
 
+    public int getStatusCode() {
+        return response.getStatusCode();
+    }
 }

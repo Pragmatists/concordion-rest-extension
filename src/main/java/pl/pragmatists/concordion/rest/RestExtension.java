@@ -72,6 +72,7 @@ public class RestExtension implements ConcordionExtension {
         concordionExtender.withCommand(REST_EXTENSION_NS, "jsonBody", new JsonBodyCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "setHeader", new SetHeaderCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "status", new ExpectedStatusCommand());
+        concordionExtender.withCommand(REST_EXTENSION_NS, "statusCode", new ExpectedStatusCodeCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "success", new ExpectedSuccessCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "header", new ExpectedHeaderCommand());
         concordionExtender.withCommand(REST_EXTENSION_NS, "jsonResponse", new ExpectedJsonResponseCommand());              
@@ -90,6 +91,7 @@ public class RestExtension implements ConcordionExtension {
                 put("jsonBody", "pre");
                 put("setHeader", "code");
                 put("status", "code");
+                put("statusCode", "code");
                 put("success", "span");
                 put("header", "code");
                 put("jsonResponse", "pre");

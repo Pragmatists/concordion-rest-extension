@@ -42,7 +42,15 @@ public class StatusCommandFixture {
     public void respondOkFor(String url) {
         respondWith(200, url);
     }
-    
+
+    public void respondFor(String url, Integer statusCode, String statusLine) {
+        http.resetMappings();
+        http.givenThat(
+                get(urlMatching(url)).
+                        willReturn(aResponse().withStatus(statusCode).withStatusMessage(statusLine))
+        );
+    }
+
     public void respondWith(Integer code, String url){
         http.resetMappings();
         http.givenThat(

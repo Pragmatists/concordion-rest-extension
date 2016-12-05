@@ -1,25 +1,22 @@
 package pl.pragmatists.concordion.rest;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-
-import java.util.List;
-
+import com.github.tomakehurst.wiremock.http.RequestMethod;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.matching.RequestPattern;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import org.concordion.api.extension.Extensions;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-
 import test.concordion.FixtureExtension;
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 
-import com.github.tomakehurst.wiremock.http.RequestMethod;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.github.tomakehurst.wiremock.matching.RequestPattern;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import java.util.List;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
 
 @RunWith(ConcordionRunner.class)
 @Extensions(FixtureExtension.class)
@@ -60,7 +57,8 @@ public class DisablePlaceholdersFixture {
     }
     
     public LoggedRequest requestSentTo(String method, String url) {
-        List<LoggedRequest> requests = http.findRequestsMatching(new RequestPattern(RequestMethod.fromString(method), url)).getRequests();
+        RequestPattern pattern = newRequestPattern(RequestMethod.fromString(method), urlEqualTo(url)).build();
+        List<LoggedRequest> requests = http.findRequestsMatching(pattern).getRequests();
         return requests.get(0);
     }
     

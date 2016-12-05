@@ -1,0 +1,53 @@
+<html
+        xmlns:c="http://www.concordion.org/2007/concordion"
+        xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+        xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+>
+<body>
+
+<h1>Status Code Command</h1>
+<p>TODO</p>
+
+<div class="example">
+    <h3>Should fail if status codes doesn't match</h3>
+    Given there is <b>no</b> resource at <code>/hello</code><br/>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+        <rest:request>
+            <rest:get>/hello</rest:get>
+            <rest:statusCode>200</rest:statusCode>
+        </rest:request>
+    </f:fixture>
+    Then it should produce following output:
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>/hello</code>
+            <code class="failure">
+                <del class="expected">200</del>
+                <ins class="actual">404</ins>
+            </code>
+        </div>
+    </div>
+</div>
+
+<div class="example">
+    <h3>Should be successful if status codes match</h3>
+    Given there is resource at <code c:execute="respondOkFor(#TEXT)">/hello</code><br/>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+        <rest:request>
+            <rest:get>/hello</rest:get>
+            <rest:statusCode>200</rest:statusCode>
+        </rest:request>
+    </f:fixture>
+    Then it should produce following output:
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>/hello</code>
+            <code class="success">200</code>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -44,7 +44,7 @@ public class ExpectedAttachmentCommand extends AbstractCommand {
         String filename = element.getText();
         RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
         InputStream actualBody = response.getBodyAsInputStream();
-        
+
         Resource resource = commandCall.getResource();
         System.err.println(resource);
         
@@ -52,7 +52,10 @@ public class ExpectedAttachmentCommand extends AbstractCommand {
 
         try {
             OutputStream output = target.getOutputStream(destination);
-            IOUtils.copy(actualBody, output);
+            int copied = IOUtils.copy(actualBody, output);
+            if(copied <= 0){
+                throw new IllegalStateException("No content copied from response body!");
+            }
         } catch (Exception e) {
             resultRecorder.record(Result.FAILURE);
             announceFailure(element, filename, "(no attachment)");

@@ -2,6 +2,8 @@ package pl.pragmatists.concordion.rest;
 
 import java.util.List;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import org.concordion.api.extension.Extensions;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.Before;
@@ -16,6 +18,8 @@ import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+
+import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
 
 @RunWith(ConcordionRunner.class)
 @Extensions(FixtureExtension.class)
@@ -49,7 +53,8 @@ public class CustomizingHostAndPortFixture {
     }
     
     public LoggedRequest requestSentTo(String method, String url) {
-        List<LoggedRequest> requests = http.findRequestsMatching(new RequestPattern(RequestMethod.fromString(method), url)).getRequests();
+        RequestPattern pattern = newRequestPattern(RequestMethod.fromString(method), WireMock.urlEqualTo(url)).build();
+        List<LoggedRequest> requests = http.findRequestsMatching(pattern).getRequests();
         return requests.get(0);
     }
     

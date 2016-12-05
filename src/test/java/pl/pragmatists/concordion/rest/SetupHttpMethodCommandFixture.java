@@ -1,17 +1,18 @@
 package pl.pragmatists.concordion.rest;
 
-import java.util.List;
-
+import com.github.tomakehurst.wiremock.http.RequestMethod;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import org.junit.Before;
 import org.junit.Rule;
-
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 
-import com.github.tomakehurst.wiremock.http.RequestMethod;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.github.tomakehurst.wiremock.matching.RequestPattern;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import java.util.List;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
 
 public class SetupHttpMethodCommandFixture {
 
@@ -37,7 +38,9 @@ public class SetupHttpMethodCommandFixture {
     }
 
     public boolean requestSent(String method, String url) {
-        List<LoggedRequest> requests = http.findRequestsMatching(new RequestPattern(RequestMethod.fromString(method), url)).getRequests();
+
+        RequestPatternBuilder pattern = newRequestPattern(RequestMethod.fromString(method), urlEqualTo(url));
+        List<LoggedRequest> requests = http.findRequestsMatching(pattern.build()).getRequests();
         return requests.size() == 1;
     }
 
