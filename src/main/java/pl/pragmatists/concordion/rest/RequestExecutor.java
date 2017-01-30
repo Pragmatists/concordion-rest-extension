@@ -3,14 +3,16 @@ package pl.pragmatists.concordion.rest;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.concordion.api.Evaluator;
-
-import pl.pragmatists.concordion.rest.RestExtension.Config;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
+import pl.pragmatists.concordion.rest.RestExtension.Config;
 
 public class RequestExecutor {
     
@@ -26,11 +28,11 @@ public class RequestExecutor {
     
     private Config config;
 
-    public RequestExecutor(Config config) {
+    protected RequestExecutor(Config config) {
         request = RestAssured.given()
                 .urlEncodingEnabled(false)
                 .port(config.port)
-                .baseUri(config.host)
+                .baseUri("http://" + config.host)
                 .log()
                 .all(true);
         this.config = config;
@@ -46,8 +48,31 @@ public class RequestExecutor {
         return this;
     }
     
+    void resolvePlaceholders(Evaluator evaluator){
+        
+        evaluator.setVariable("#host", config.host);
+        evaluator.setVariable("#port", config.port);
+        
+        url = resolve(url, evaluator);
+
+        for(String header : headers.keySet()) {
+            String placeholder = headers.get(header);
+            headers.put(header, resolve(placeholder, evaluator));
+        }
+        
+        body = resolve(body, evaluator);
+    }
+    
     public void execute(){
 
+        for (String header : headers.keySet()) {
+            request.header(header, headers.get(header));
+        }
+
+        if(body != null){
+            request.body(body);
+        }
+        
         if("GET".equals(method)){
             response = request.get(url);
             return;
@@ -71,14 +96,36 @@ public class RequestExecutor {
          
     }
 
+    String resolve(String text, Evaluator evaluator) {
+        
+        if(text == null){
+            return null;
+        }
+        
+        Pattern placeholder = Pattern.compile("\\{\\s*([a-zA-Z_#][^}]+)\\}");
+        
+        Matcher matcher = placeholder.matcher(text);
+        while(matcher.find()){
+            String group = matcher.group(0);
+            String expression = matcher.group(1);
+            String result = "" + evaluator.evaluate(expression);
+            
+            System.err.println(String.format("Replacing %s with %s", group, result));
+            
+            text = text.replace(group, result);
+        }
+        
+        return text;
+    }
+
+    
     public RequestExecutor header(String headerName, String headerValue) {
         headers.put(headerName, headerValue);
-        request.header(headerName, headerValue);
         return this;
     }
 
     public String getHeader(String attributeValue) {
-        return replacePlaceholdersIfNeeded(response.getHeader(attributeValue));
+        return response.getHeader(attributeValue);
     }
 
     public String getStatusLine() {
@@ -87,38 +134,11 @@ public class RequestExecutor {
 
     public RequestExecutor body(String body) {
         this.body = body;
-        request.body(body);
         return this;
     }
 
     public String getBody() {
-        return replacePlaceholdersIfNeeded(response.body().asString());
-    }
-
-    private String replacePlaceholdersIfNeeded(String string) {
-        
-        if(string == null){
-            return null;
-        }
-        
-        if(config.enablePlaceholders){
-
-            string = replaceWith(string, "https://" + config.host + ":" + config.port, "https://{host:port}");
-            string = replaceWith(string, "https://" + config.host, "https://{host}");
-
-            string = replaceWith(string, "http://" + config.host + ":" + config.port, "http://{host:port}");
-            string = replaceWith(string, "http://" + config.host, "http://{host}");
-
-            if(response.getSessionId() != null){
-                string = replaceWith(string, response.getSessionId(), "{sessionId}");
-            }
-        }
-        
-        return string;
-    }
-
-    private String replaceWith(String string, String replace, String replacement) {
-        return string.replaceAll(replace, replacement);
+        return response.body().asString();
     }
 
     public InputStream getBodyAsInputStream() {

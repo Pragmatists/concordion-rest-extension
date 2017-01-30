@@ -23,14 +23,25 @@ public class JsonBodyCommand extends AbstractCommand {
     public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
         Element element = commandCall.getElement();
-        element.addStyleClass("json");        
+        element.addStyleClass("json");
         
-        String body = new JsonPrettyPrinter().prettyPrint(element.getText());
-        element.moveChildrenTo(new Element("tmp"));
+        String body = element.getText();
         element.appendText(body);
         
         RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
         request.body(body);
+    }
+    
+    @Override
+    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+
+        Element element = commandCall.getElement();
+        RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
+        
+        String body = new JsonPrettyPrinter().prettyPrint(request.getRequestBody());
+        element.moveChildrenTo(new Element("span"));
+        element.appendText(body);
+
     }
     
 }

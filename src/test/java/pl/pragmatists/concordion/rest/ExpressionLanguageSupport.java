@@ -2,34 +2,28 @@ package pl.pragmatists.concordion.rest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 
 import org.concordion.api.extension.Extensions;
 import org.concordion.integration.junit4.ConcordionRunner;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
+
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 
 import test.concordion.FixtureExtension;
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.github.tomakehurst.wiremock.matching.RequestPattern;
 
 @RunWith(ConcordionRunner.class)
 @Extensions(FixtureExtension.class)
-public class HeaderCommandFixture {
+public class ExpressionLanguageSupport extends SetupHttpMethodCommandFixture{
 
-    @Rule
-    public WireMockRule http = new WireMockRule();
-   
-    @Before 
-    public void installExtension() {
-        System.setProperty("concordion.extensions", RestExtension.class.getName());
-    }
-    
     public ProcessingResult process(String html){
         
         return new TestRig()
@@ -40,16 +34,22 @@ public class HeaderCommandFixture {
             
     }
     
-    public void respondOkFor(String url) {
-        respondWith(200, url);
+    public String echo(String text){
+        return text;
     }
     
-    public void respondWith(Integer code, String url){
-        http.resetMappings();
-        http.givenThat(
-                get(urlMatching(url)).
-                willReturn(aResponse().withStatus(code))
-               );
+    public String requestHeaderValueFor(String url, String headerName) {
+        RequestPatternBuilder pattern = newRequestPattern().withUrl(url);
+        List<LoggedRequest> requests = http.findRequestsMatching(pattern.build()).getRequests();
+        assertThat(requests).hasSize(1);
+        return requests.get(0).getHeader(headerName);
+    }
+
+    public String requestBodyFor(String url) {
+        RequestPatternBuilder pattern = newRequestPattern().withUrl(url);
+        List<LoggedRequest> requests = http.findRequestsMatching(pattern.build()).getRequests();
+        assertThat(requests).hasSize(1);
+        return requests.get(0).getBodyAsString();
     }
     
     public void respondWithHeader(String url, String headerName, String headerValue) {
@@ -59,9 +59,6 @@ public class HeaderCommandFixture {
                 willReturn(aResponse().withStatus(200).withHeader(headerName, headerValue))
                );
     }
-    
-    public boolean urlHasBeenRequestedWithGET(String url) {
-        RequestPattern request = getRequestedFor(urlMatching(url)).build();
-        return http.findRequestsMatching(request).getRequests().size() == 1;
-    }
+
+
 }

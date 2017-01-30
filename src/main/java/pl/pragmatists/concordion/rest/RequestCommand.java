@@ -32,6 +32,7 @@ public class RequestCommand extends AbstractCommand {
         
         childCommands.execute(evaluator, resultRecorder);
 
+        request.resolvePlaceholders(evaluator);
         request.execute();
         
         announceExecuteCompleted(commandCall.getElement());

@@ -1,25 +1,24 @@
 package pl.pragmatists.concordion.rest;
 
+import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
+
 import java.util.List;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import org.concordion.api.extension.Extensions;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 
-import test.concordion.FixtureExtension;
-import test.concordion.ProcessingResult;
-import test.concordion.TestRig;
-
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 
-import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
+import test.concordion.FixtureExtension;
+import test.concordion.ProcessingResult;
+import test.concordion.TestRig;
 
 @RunWith(ConcordionRunner.class)
 @Extensions(FixtureExtension.class)

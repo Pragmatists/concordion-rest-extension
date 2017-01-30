@@ -24,8 +24,7 @@ public class RestExtension implements ConcordionExtension {
         boolean codeMirrorEnabled = false;
         boolean includeBootstrap = false;
         int port = 8080;
-        String host = "http://localhost";
-        boolean enablePlaceholders = true;
+        String host = "localhost";
     }
 
     private Config config = new Config();
@@ -41,9 +40,6 @@ public class RestExtension implements ConcordionExtension {
     }
 
     public RestExtension host(String host){
-        if(!host.startsWith("http")){
-            host = "http://" + host;
-        }
         config.host = host;
         return this;
     }
@@ -130,9 +126,4 @@ public class RestExtension implements ConcordionExtension {
         });
     }
 
-    public RestExtension disablePlaceholders() {
-        config.enablePlaceholders = false;
-        return this;
-    }
-        
 }

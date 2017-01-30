@@ -34,6 +34,7 @@ public class JsonResponseCommandFixture {
         
         return new TestRig()
             .withFixture(this)
+            .withNamespaceDeclaration("c", "http://www.concordion.org/2007/concordion")
             .withNamespaceDeclaration("rest", RestExtension.REST_EXTENSION_NS)
             .processFragment(html);
             

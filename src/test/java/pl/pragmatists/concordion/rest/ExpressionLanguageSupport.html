@@ -1,0 +1,125 @@
+<html 
+  xmlns:c="http://www.concordion.org/2007/concordion"
+  xmlns:f="http://pragmatists.github.io/concordion-rest-extension"
+  xmlns:rest="http://pragmatists.github.io/concordion-rest-extension"
+  >
+<body>
+  
+  <h1>Expression Language Support for Commands</h1>
+  <p>TODO</p>
+  
+  <div class="example">
+    <h3>Should send POST request based on variable to given url</h3>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+  <rest:post>/{#url}</rest:post>
+  where #url = <b c:set="#url">hello</b>
+</rest:request>   
+    </f:fixture>
+    Then <span c:execute="#sent = requestSent(#method, #url)">
+    <b c:set="#method">POST</b> request has been <span c:assertTrue="#sent">sent</span> to <code c:set="#url">/hello</code></span>
+    and it should generate following output
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>/hello</code>
+            where #url = <b>hello</b>
+        </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <h3>Should send GET request based on expression to given url</h3>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+  <rest:get>/{echo(#url)}</rest:get>
+  where #url = <b c:set="#url">hello</b>
+</rest:request>   
+    </f:fixture>
+    Then <span c:execute="#sent = requestSent(#method, #url)">
+    <b c:set="#method">GET</b> request has been <span c:assertTrue="#sent">sent</span> to <code c:set="#url">/hello</code></span>
+    and it should generate following output
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>/hello</code>
+            where #url = <b>hello</b>
+        </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <h3>Should set header based on expression</h3>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+  <rest:setHeader name="Greeting">Hello {#who}!</rest:setHeader>
+  <rest:get>/header</rest:get>
+  where #who = <b c:set="#who">World</b>
+</rest:request>   
+    </f:fixture>
+    Then <span c:execute="#sent = requestSent(#method, #target)">
+    <b c:set="#method">GET</b> request has been <span c:assertTrue="#sent">sent</span> to <code c:set="#target">/header</code></span>
+    with <b c:set="#header">Greeting</b> header value equal to <b c:assertEquals="requestHeaderValueFor(#target, #header)">Hello World!</b>
+    and it should generate following output
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code name="Greeting">Hello World!</code>
+            <code>/header</code>
+            where #who = <b>World</b>
+        </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <h3>Should set body based on expression</h3>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+  <rest:post>/body</rest:post>
+  <rest:jsonBody>
+    {
+      "greetings": { #message }
+    }
+  </rest:jsonBody>
+  where #message = <b c:set="#message">"Hello World!"</b>
+</rest:request>   
+    </f:fixture>
+    Then <span c:execute="#sent = requestSent(#method, #target)">
+    <b c:set="#method">POST</b> request has been <span c:assertTrue="#sent">sent</span> to <code c:set="#target">/body</code></span>
+    with body equal to <b c:assertEquals="requestBodyFor(#target)">{ "greetings": "Hello World!" }</b>
+    and it should generate following output
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>/body</code>
+            <pre>
+{
+  "greetings": "Hello World!"
+}
+            </pre>
+            where #message = <b>"Hello World!"</b>
+        </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <h3>Should set #host and #port variables</h3>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+  <rest:post>http://{#host}:{#port}/path</rest:post>
+</rest:request>   
+    </f:fixture>
+    Then <span c:execute="#sent = requestSent(#method, #url)">
+    <b c:set="#method">POST</b> request has been <span c:assertTrue="#sent">sent</span> to <code c:set="#url">/path</code></span>
+    and it should generate following output
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>http://localhost:8080/path</code>
+        </div>
+    </div>
+  </div>
+
+
+</body>
+</html>

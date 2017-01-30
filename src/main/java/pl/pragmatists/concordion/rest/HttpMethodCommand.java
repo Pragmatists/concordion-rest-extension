@@ -19,11 +19,19 @@ public class HttpMethodCommand extends AbstractCommand {
         
         Element element = commandCall.getElement();
         element.addStyleClass(method.toLowerCase());
-        
         String url = element.getText();
+        
         RequestExecutor.fromEvaluator(evaluator)
             .method(method)
             .url(url);
+    }
+    
+    @Override
+    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+        Element element = commandCall.getElement();
+        String url = RequestExecutor.fromEvaluator(evaluator).getRequestUrl();
+        element.moveChildrenTo(new Element("span"));
+        element.appendText(url);
     }
     
 }

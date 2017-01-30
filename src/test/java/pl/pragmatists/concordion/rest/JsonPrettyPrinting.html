@@ -63,14 +63,14 @@
 		</pre>
 		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
-<rest:jsonResponse>{ text:"text",'isUgly':   yes, "arrayPrimitieves": ["one", 2, 3,], "arrayObjects": [{"three": 3}, {"two":2}]  }</rest:jsonResponse>
+<rest:jsonResponse>{ 'text':"text",isUgly:   yes, "arrayPrimitieves": ["one", 2, 3,], "arrayObjects": [{"three": 3}, {"two":2}]  }</rest:jsonResponse>
 		</f:fixture>
 		Then it should produce following output: 
 		<div f:assertHtmlIncludes="#result" class="concordion-output">
 	<pre class="json">
 {
-  text: "text",
-  'isUgly': yes,
+  'text': "text",
+  isUgly: yes,
   "arrayPrimitieves": ["one", 2, 3, ],
   "arrayObjects": [{
     "three": 3

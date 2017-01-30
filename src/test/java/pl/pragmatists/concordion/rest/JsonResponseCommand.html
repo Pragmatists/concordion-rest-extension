@@ -80,8 +80,33 @@
 { 
   "greeting": "Hello World" 
 }</pre>
+</div>
+      </div>	
+    </div>		
+	<div class="example">
+		<h3>Should be successful if body matches from variable</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
+		<pre c:set="#body">{ "greeting": "Hello World!" }</pre></div><br/>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse>{ "greeting": "Hello {#who}!" }</rest:jsonResponse>
+    where #who = <span c:set="#who">World</span>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<pre class="rest-success json">
+{ 
+  "greeting": "Hello World!" 
+}</pre>
+    where #who = <span>World</span>
 </div>			
-		</div> 
+	   </div>
 	</div>
 </body>
 </html>

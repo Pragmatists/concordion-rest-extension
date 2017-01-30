@@ -116,17 +116,19 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
 
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
 
+        RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
+
         Element element = commandCall.getElement();
         element.addStyleClass("json");
         
         JsonPrettyPrinter printer = new JsonPrettyPrinter();
         
-        String expected = printer.prettyPrint(element.getText());
+        String expected = printer.prettyPrint(request.resolve(element.getText(), evaluator));
         element.moveChildrenTo(new Element("tmp"));
         element.appendText(expected);
         
         String mode = modeFrom(element);
-        String actual = RequestExecutor.fromEvaluator(evaluator).getBody();
+        String actual = request.getBody();
         String prettyActual = printer.prettyPrint(actual);
 
         if (StringUtils.isEmpty(actual)){

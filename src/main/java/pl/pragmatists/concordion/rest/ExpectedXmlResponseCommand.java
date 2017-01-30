@@ -35,6 +35,8 @@ public class ExpectedXmlResponseCommand extends AbstractCommand {
     
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
 
+        RequestExecutor request = RequestExecutor.fromEvaluator(evaluator);
+
         Element element = commandCall.getElement();
         element.addStyleClass("xml");
         StringBuilder xml = new StringBuilder();
@@ -45,8 +47,8 @@ public class ExpectedXmlResponseCommand extends AbstractCommand {
         }
         element.moveChildrenTo(new Element("tmp"));
         
-        String actual = RequestExecutor.fromEvaluator(evaluator).getBody();
-        String expected = prettyPrint(xml.toString());
+        String actual = request.getBody();
+        String expected = prettyPrint(request.resolve(xml.toString(), evaluator));
         element.appendText(expected);
 
         if(StringUtils.isBlank(actual)){

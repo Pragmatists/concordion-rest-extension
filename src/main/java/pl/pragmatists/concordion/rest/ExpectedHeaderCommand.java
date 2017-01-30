@@ -25,9 +25,12 @@ public class ExpectedHeaderCommand extends AbstractCommand {
         
         Element element = commandCall.getElement();
         element.addStyleClass("header");
-        String expectedHeader = element.getText().trim();
         
-        RequestExecutor response = RequestExecutor.fromEvaluator(evaluator);
+        RequestExecutor response =  RequestExecutor.fromEvaluator(evaluator);
+        String expectedHeader = response.resolve(element.getText().trim(), evaluator);
+        
+        element.moveChildrenTo(new Element("span"));
+        element.appendText(expectedHeader);
         
         String actualHeader = response.getHeader(element.getAttributeValue("name"));
         if (actualHeader == null)
