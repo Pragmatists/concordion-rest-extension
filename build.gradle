@@ -3,7 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.ajoberstar.github-pages'
 apply plugin: "maven"
 
-//apply from: 'publish.gradle'
+apply from: 'publish.gradle'
 
 buildscript {
     repositories {
