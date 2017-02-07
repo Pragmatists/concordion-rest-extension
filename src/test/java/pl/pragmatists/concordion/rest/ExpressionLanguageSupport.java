@@ -1,6 +1,7 @@
 package pl.pragmatists.concordion.rest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.any;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
@@ -58,7 +59,22 @@ public class ExpressionLanguageSupport extends SetupHttpMethodCommandFixture{
                 get(urlMatching(url)).
                 willReturn(aResponse().withStatus(200).withHeader(headerName, headerValue))
                );
-    }
+    }    
 
+    public void respondOkToAnyRequest() {
+        http.resetMappings();
+        http.givenThat(
+                any(urlMatching("/.*")).
+                willReturn(aResponse().withStatus(200))
+               );
+    }
+    
+    public void respondWithBody(String url, String body) {
+        http.resetMappings();
+        http.givenThat(
+                get(urlMatching(url)).
+                willReturn(aResponse().withStatus(200).withBody(body))
+               );
+    }
 
 }

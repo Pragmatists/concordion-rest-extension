@@ -83,6 +83,100 @@
 </div>
       </div>	
     </div>		
+
+	<div class="example">
+		<h3>Should be successful if body subset matches</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
+		<pre c:set="#body">{ "greeting": { "message": "Hello World"} }</pre></div><br/>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse path="greeting">{ "message": "Hello World" }</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<pre class="rest-success json" path="greeting">
+{ "message": "Hello World" } 
+</pre>
+</div>
+      </div>	
+    </div>		
+
+	<div class="example">
+		<h3>Should be successful if body subset matches (primitive value)</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
+		<pre c:set="#body">{ "greeting": { "message": "Hello World"} }</pre></div><br/>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse path="$.greeting.message">"Hello World"</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<pre class="rest-success json" path="$.greeting.message">
+"Hello World" 
+</pre>
+</div>
+      </div>	
+    </div>		
+
+	<div class="example">
+		<h3>Should be successful if body subset matches (array)</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
+		<pre c:set="#body">{ "greeting": { "messages": ["Hello", "World"]} }</pre></div><br/>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse path="$.greeting.messages">["Hello", "World"]</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<pre class="rest-success json" path="$.greeting.messages">
+["Hello", "World"] 
+</pre>
+</div>
+      </div>	
+    </div>		
+
+	<div class="example">
+		<h3>Should be successful if body subset matches expression</h3>
+		Given there is resource at <code c:set="#url">/hello</code><br/>
+		And it responds with body <div c:execute="respondWithBody(#url, #body)"> 
+		<pre c:set="#body">{ "greeting": { "messages": ["Hello", "World"]} }</pre></div><br/>
+		When following fixture is executed:
+		<f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+	<rest:get>/hello</rest:get>
+	<rest:jsonResponse path="$.greeting.messages.length()">2</rest:jsonResponse>
+</rest:request>		
+		</f:fixture>
+		Then it should produce following output: 
+		<div f:assertHtmlIncludes="#result" class="concordion-output">
+<div>
+	<code>/hello</code>
+	<pre class="rest-success json" path="$.greeting.messages.length()">
+2 
+</pre>
+</div>
+      </div>	
+    </div>		
+
+
 	<div class="example">
 		<h3>Should be successful if body matches from variable</h3>
 		Given there is resource at <code c:set="#url">/hello</code><br/>

@@ -1,7 +1,12 @@
 package pl.pragmatists.concordion.rest;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.concordion.api.AbstractCommand;
@@ -15,11 +20,13 @@ import org.concordion.api.listener.AssertFailureEvent;
 import org.concordion.api.listener.AssertSuccessEvent;
 import org.concordion.internal.util.Announcer;
 
-import pl.pragmatists.concordion.rest.util.JsonPrettyPrinter;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+
+import pl.pragmatists.concordion.rest.util.Comparator;
+import pl.pragmatists.concordion.rest.util.Comparator.Replacement;
+import pl.pragmatists.concordion.rest.util.JsonPrettyPrinter;
 
 public class ExpectedJsonResponseCommand extends AbstractCommand {
 
@@ -34,10 +41,22 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
             return actualJson.equals(expectedJson);
         }
 
+        @Override
+        public List<Replacement> getReplacements() {
+            return Collections.emptyList();
+        }
+
     }
 
     private static class IncludesJsonComparator implements JsonComparator {
 
+        private List<Replacement> replacements = new ArrayList<Replacement>();
+        
+        @Override
+        public List<Replacement> getReplacements() {
+            return replacements;
+        }
+        
         @Override
         public boolean assertEqualsJson(String actual, String expected) {
 
@@ -91,8 +110,23 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
                 return true;
             }
 
-            return actualJson.equals(expectedJson);
-
+            String expected = expectedJson.toString();
+            
+            Matcher matcher = Pattern.compile("^\"(\\$.*)\"$").matcher(expected);
+            if(matcher.matches()){
+                expected = matcher.group(1);
+            }
+            
+            Comparator comparator = new Comparator(expected);
+            boolean areEqual = comparator.compareTo(actualJson.toString());
+            
+            if(areEqual){
+                replacements.addAll(comparator.replacements());
+                return true;
+            } else {
+                return false;
+            }
+            
         }
 
     }
@@ -100,6 +134,9 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
     private interface JsonComparator {
 
         boolean assertEqualsJson(String actual, String expected);
+
+        List<Replacement> getReplacements();
+        
     }
 
     private static JsonElement parse(String input) {
@@ -124,11 +161,17 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
         JsonPrettyPrinter printer = new JsonPrettyPrinter();
         
         String expected = printer.prettyPrint(request.resolve(element.getText(), evaluator));
-        element.moveChildrenTo(new Element("tmp"));
-        element.appendText(expected);
         
         String mode = modeFrom(element);
-        String actual = request.getBody();
+        
+        String path = element.getAttributeValue("path");
+        String actual;
+        if(path == null){
+            actual = request.getBody();
+        } else {
+            actual = request.getBody(path);
+        }
+        
         String prettyActual = printer.prettyPrint(actual);
 
         if (StringUtils.isEmpty(actual)){
@@ -137,19 +180,36 @@ public class ExpectedJsonResponseCommand extends AbstractCommand {
         }
         
         try {
-            if (comparator(mode).assertEqualsJson(prettyActual, expected)) {
+            
+            JsonComparator comparator = comparator(mode, evaluator);
+            if (comparator.assertEqualsJson(prettyActual, expected)) {
                 jsonEquals(resultRecorder, element);
+                
+                for (Replacement r : comparator.getReplacements()) {
+                    evaluator.setVariable("#" + r.getVariable(), r.getValue());
+                    expected = r.replaceIn(expected);
+                }
+                
+                element.moveChildrenTo(new Element("tmp"));
+                element.appendText(expected);
+
             } else {
+
+                element.moveChildrenTo(new Element("tmp"));
+                element.appendText(expected);
+
                 jsonDoesNotEqual(resultRecorder, element, prettyActual, expected);
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             jsonError(resultRecorder, element, prettyActual, expected);
         }
-
+        
     }
 
-    private JsonComparator comparator(String mode) {
+    private JsonComparator comparator(String mode, Evaluator evaluator) {
         
         if("includes".equals(mode)){
             return new IncludesJsonComparator();

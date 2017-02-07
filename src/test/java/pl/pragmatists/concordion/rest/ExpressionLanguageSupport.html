@@ -6,7 +6,8 @@
 <body>
   
   <h1>Expression Language Support for Commands</h1>
-  <p>TODO</p>
+  
+  <p>Given server responds <b c:execute="respondOkToAnyRequest()">OK</b> to any request</p>
   
   <div class="example">
     <h3>Should send POST request based on variable to given url</h3>
@@ -116,6 +117,81 @@
     <div f:assertHtmlIncludes="#result" class="concordion-output">
         <div>
             <code>http://localhost:8080/path</code>
+        </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <h3>Should capture response header into variable</h3>
+    Given <span c:execute="respondWithHeader(#url, #header, #value)"><b c:set="#url">/hello</b> 
+    responds with header <b c:set="#header">Greetings</b> = <b c:set="#value">Hello John!</b></span>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+  <rest:get>/hello</rest:get>
+  <rest:header name="Greetings">Hello {$who}!</rest:header>
+  and #who = <b c:assertEquals="#who">John</b>
+</rest:request>   
+	
+    </f:fixture>
+    Then it should generate following output
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>/hello</code>
+            <code name="Greetings">Hello John!</code>
+            and #who = <b class="success">John</b>
+        </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <h3>Should capture response body part into variable</h3>
+    Given <span c:execute="respondWithBody(#url, #body)"><b c:set="#url">/hello</b> 
+    responds with body <pre c:set="#body">{"name": "John", "greeting": "Hello World!"}</pre></span>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+  <rest:get>/hello</rest:get>
+  <rest:jsonResponse>{"greeting": "Hello {$who}!"}</rest:jsonResponse>
+  and #who = <b c:assertEquals="#who">World</b>
+</rest:request>   
+	
+    </f:fixture>
+    Then it should generate following output
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>/hello</code>
+<pre>{
+	"greeting": "Hello World!"
+}
+</pre>
+            and #who = <b class="success">World</b>
+        </div>
+    </div>
+  </div>
+
+  <div class="example">
+    <h3>Should capture response body part into variable (non-string primitive)</h3>
+    Given <span c:execute="respondWithBody(#url, #body)"><b c:set="#url">/hello</b> 
+    responds with body <pre c:set="#body">{"name": "John", "greeting": 5}</pre></span>
+    When following fixture is executed:
+    <f:fixture c:execute="#result = process(#TEXT)">
+<rest:request>
+  <rest:get>/hello</rest:get>
+  <rest:jsonResponse>{"greeting": $who}</rest:jsonResponse>
+  and #who = <b c:assertEquals="#who">5</b>
+</rest:request>   
+	
+    </f:fixture>
+    Then it should generate following output
+    <div f:assertHtmlIncludes="#result" class="concordion-output">
+        <div>
+            <code>/hello</code>
+<pre>{
+	"greeting": 5
+}
+</pre>
+            and #who = <b class="success">5</b>
         </div>
     </div>
   </div>

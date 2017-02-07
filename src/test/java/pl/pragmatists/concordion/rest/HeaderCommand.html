@@ -104,30 +104,5 @@
     </div> 
   </div>
 	
-  <div class="example">
-    <h3>Should allow to capture variable from header value</h3>
-    Given there is resource at <code c:set="#url">/hello</code><br/>
-    And it responds with header <span c:execute="respondWithHeader(#url, #headerName, #headerValue)"> 
-    <code c:set="#headerName">Content-Type</code> set to <b c:set="#headerValue">text/html</b></span><br/>
-    When following fixture is executed:
-    <f:fixture c:execute="#result = process(#TEXT)">
-<rest:request>
-  <rest:get>/hello</rest:get>
-  <rest:header name="Content-Type">text/{#subtype = parse()}</rest:header>
-  and #subtype = <b c:echo="#subtype"></b>
-</rest:request>   
-    </f:fixture>
-    Then it should produce following output: 
-    <div f:assertHtmlIncludes="#result" class="concordion-output">
-<div>
-  <code>/hello</code>
-  <code class="success">
-    text/html
-  </code>
-  and #subtype = <b>html</b>
-</div>      
-    </div> 
-  </div>
-	
 </body>
 </html>

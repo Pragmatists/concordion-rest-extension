@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
 
 import org.concordion.api.Evaluator;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -179,5 +182,21 @@ public class RequestExecutor {
 
     public int getStatusCode() {
         return response.getStatusCode();
+    }
+
+    public String getBody(String path) {
+        String result = getBody();
+        if(result == null || result.isEmpty()){
+            return null;
+        }
+        
+        try {
+            Object object = JsonPath.compile(path).read(result);
+            return new ObjectMapper().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            return result;
+        } catch (RuntimeException e){
+            return result;
+        }
     }
 }

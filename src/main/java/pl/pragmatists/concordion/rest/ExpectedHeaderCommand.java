@@ -12,6 +12,9 @@ import org.concordion.api.listener.AssertSuccessEvent;
 import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.util.Announcer;
 
+import pl.pragmatists.concordion.rest.util.Comparator;
+import pl.pragmatists.concordion.rest.util.Comparator.Replacement;
+
 public class ExpectedHeaderCommand extends AbstractCommand {
 
     private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
@@ -21,27 +24,38 @@ public class ExpectedHeaderCommand extends AbstractCommand {
     }
     
     @Override
-    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void verify(CommandCall commandCall, final Evaluator evaluator, ResultRecorder resultRecorder) {
         
         Element element = commandCall.getElement();
         element.addStyleClass("header");
         
         RequestExecutor response =  RequestExecutor.fromEvaluator(evaluator);
         String expectedHeader = response.resolve(element.getText().trim(), evaluator);
-        
-        element.moveChildrenTo(new Element("span"));
-        element.appendText(expectedHeader);
-        
         String actualHeader = response.getHeader(element.getAttributeValue("name"));
         if (actualHeader == null)
             actualHeader = "(not set)";
-        System.err.println("HEADER(Expected): " + expectedHeader);
-        System.err.println("HEADER(Actual): " + actualHeader);
         
-        if(expectedHeader.equals(actualHeader)){
+        
+        Comparator comparator = new Comparator(expectedHeader);
+        boolean equal = comparator.compareTo(actualHeader); 
+        
+        if(equal){
+            
+            for(Replacement r: comparator.replacements()){
+                evaluator.setVariable("#" + r.getVariable(), r.getValue());
+                expectedHeader = r.replaceIn(expectedHeader);
+            }
+
+            element.moveChildrenTo(new Element("tmp"));
+            element.appendText(expectedHeader);
+            
             resultRecorder.record(Result.SUCCESS);
             announceSuccess(element);
         } else {
+            
+            element.moveChildrenTo(new Element("tmp"));
+            element.appendText(expectedHeader);
+
             resultRecorder.record(Result.FAILURE);
             announceFailure(element, expectedHeader, actualHeader);
         }
@@ -55,6 +69,5 @@ public class ExpectedHeaderCommand extends AbstractCommand {
     private void announceFailure(Element element, String expected, Object actual) {
         listeners.announce().failureReported(new AssertFailureEvent(element, expected, actual));
     }
-
     
 }
