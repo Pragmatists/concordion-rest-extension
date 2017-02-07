@@ -8,8 +8,7 @@ import java.util.regex.Pattern;
 
 import org.concordion.api.Evaluator;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
@@ -192,9 +191,7 @@ public class RequestExecutor {
         
         try {
             Object object = JsonPath.compile(path).read(result);
-            return new ObjectMapper().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            return result;
+            return new Gson().toJson(object);
         } catch (RuntimeException e){
             return result;
         }

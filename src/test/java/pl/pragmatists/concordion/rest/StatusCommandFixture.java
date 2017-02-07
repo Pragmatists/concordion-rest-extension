@@ -43,6 +43,10 @@ public class StatusCommandFixture {
         respondWith(200, url);
     }
 
+    public void respondNotFound(String url) {
+        respondWith(404, url);
+    }
+
     public void respondFor(String url, Integer statusCode, String statusLine) {
         http.resetMappings();
         http.givenThat(

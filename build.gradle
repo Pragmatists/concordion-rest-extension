@@ -44,10 +44,10 @@ dependencies {
     compile 'com.jayway.restassured:rest-assured:2.4.0'
     compile 'xmlunit:xmlunit:1.6'
     compile 'commons-io:commons-io:2.4'
+    compile 'com.jayway.jsonpath:json-path:2.2.0'
     
     testCompile 'junit:junit:4.11'
     testCompile 'org.assertj:assertj-core:1.6.0'
-    testCompile 'com.jayway.jsonpath:json-path:0.9.1'
     testCompile 'com.github.tomakehurst:wiremock:2.4.1'
 }
 
