@@ -42,6 +42,10 @@ public class SuccessCommandFixture {
     public void respondOkFor(String url) {
         respondWith(200, url);
     }
+
+    public void respondNotFound(String url) {
+        respondWith(404, url);
+    }
     
     public void respondWith(Integer code, String url){
         http.resetMappings();

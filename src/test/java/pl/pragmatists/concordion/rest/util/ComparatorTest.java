@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import pl.pragmatists.concordion.rest.util.Comparator.Replacement;
@@ -44,10 +45,28 @@ public class ComparatorTest {
     }
 
     @Test
+    @Ignore("waiting for implementation")
+    public void shouldParseValueWith$() throws Exception {
+        
+        // given:
+        Comparator comparator = new Comparator("5\\$usd");
+        
+        // when:
+        boolean result = comparator.compareTo("5$usd");
+        
+        // when:
+        assertThat(result).isTrue();
+        assertThat(extractVariables(comparator))
+            .hasSize(0);
+            
+                
+    }
+    
+    @Test
     public void shouldParseCustomRegexp() throws Exception {
         
         // given:
-        Comparator comparator = new Comparator("/api/resource/{$id:\\d+}");
+        Comparator comparator = new Comparator("/api/resource/$id:\\d+");
         
         // when:
         boolean result = comparator.compareTo("/api/resource/abc123");
@@ -57,12 +76,29 @@ public class ComparatorTest {
         assertThat(result).isFalse();
         assertThat(result2).isTrue();
     }
+
+    @Test
+    public void shouldParseCustomRegexpWithSuffix() throws Exception {
+        
+        // given:
+        Comparator comparator = new Comparator("/api/resource/{$id:\\d+}/OK");
+        
+        // when:
+        boolean result = comparator.compareTo("/api/resource/123/OK");
+        
+        // when:
+        assertThat(result).isTrue();
+        assertThat(extractVariables(comparator))
+            .hasSize(1)
+            .containsEntry("id", "123");        
+
+    }
     
     @Test
     public void shouldParseStringWithMultiplePlaceholders() throws Exception {
         
         // given:
-        Comparator comparator = new Comparator("/api/resource/{$id}?ts={$timestamp}");
+        Comparator comparator = new Comparator("/api/resource/$id?ts=$timestamp");
         
         // when:
         boolean result = comparator.compareTo("/api/resource/abc123?ts=9299388821");

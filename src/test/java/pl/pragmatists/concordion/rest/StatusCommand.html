@@ -10,7 +10,7 @@
 	
 	<div class="example">
 		<h3>Should fail if status codes doesn't match</h3>
-		Given there is <b>no</b> resource at <code>/hello</code><br/>
+		Given there is <b>no</b> resource at <code c:execute="respondNotFound(#TEXT)">/hello</code><br/>
 		When following fixture is executed:
 		<f:fixture c:execute="#result = process(#TEXT)">
 <rest:request>
