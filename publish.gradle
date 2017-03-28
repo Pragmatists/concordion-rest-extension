@@ -41,7 +41,7 @@ uploadArchives {
         name 'Concordion REST Extension'
         packaging 'jar'
         description 'Set of non-official extensions to Concordion (http://concordion.org/). It provides support for writing executable specifications for REST services.'
-        url 'http://github.com/Pragmatsits/concordion-rest-extension'
+        url 'https://github.com/Pragmatists/concordion-rest-extension'
 
         scm {
           connection 'https://github.com/Pragmatists/concordion-rest-extension.git'
